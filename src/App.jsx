@@ -1,6 +1,5 @@
 import './App.css';
-import PrivateAccess from 'pages/public-content/PrivateAccess';
-import About from 'pages/public-content/About';
+import AddSong from 'components/private-content/AddSong';
 
 export default function App() {
   return (
@@ -8,9 +7,7 @@ export default function App() {
       <h1>Proyecto Neón</h1>
 
       <p>---------------</p>
-      <PrivateAccess />
-      <p>---------------</p>
-      <About />
+      <AddSong />
       <p>---------------</p>
     </>
   )
