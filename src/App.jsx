@@ -1,5 +1,5 @@
 import './App.css';
-import AddSong from 'components/private-content/AddSong';
+import AddPlaylist from './components/private-content/AddPlaylist';
 
 export default function App() {
   return (
@@ -7,7 +7,7 @@ export default function App() {
       <h1>Proyecto Neón</h1>
 
       <p>---------------</p>
-      <AddSong />
+      <AddPlaylist />
       <p>---------------</p>
     </>
   )
