@@ -1,6 +1,13 @@
 import { useForm } from 'react-hook-form';
+import { useAuth } from '../../contexts/AuthProvider';
+import { useState } from 'react';
 
-export default function AddPlaylist() {
+export default function AddPlaylist({
+    closeModal
+}) {
+
+    const { user, addPlaylist } = useAuth();
+    const [error, setError] = useState(null);
 
     const {
         register,
@@ -9,13 +16,21 @@ export default function AddPlaylist() {
         // formState: { errors },
     } = useForm();
 
-    const handleRecord = (registerData) => {
-        console.log('Album Registro -->', registerData);
+    const handleRecord = (playlistData) => {
+        try {
+            setError(null);
+            addPlaylist(user.uid, playlistData);
+            closeModal();
+        } catch (error) {
+            setError(error.message)
+        }
     };
 
     return (
         <form onSubmit={handleSubmit(handleRecord)} noValidate>
             <p>Registro</p>
+            {error && <p>{error}</p>}
+            <button onClick={() => closeModal()}>Cancelar pedido</button>
 
             {/* Título PlayList*/}
             <label htmlFor='recordTitlePlayList'>Nombre de la PlayList:</label>

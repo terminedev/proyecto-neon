@@ -2,7 +2,8 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { AuthProvider } from 'contexts/AuthProvider';
 import PrivateAccess from 'pages/public-content/PrivateAccess';
 import About from 'pages/public-content/About';
-import ProtectedRoute from 'routes/ProtectedRoute'
+import ProtectedRoute from 'routes/ProtectedRoute';
+import Home from './pages/private-content/Home';
 import './App.css';
 
 export default function App() {
@@ -20,7 +21,7 @@ export default function App() {
 
           {/* Rutas Protegidas */}
           <Route element={<ProtectedRoute />}>
-            <Route path='/' element={'Home'} />
+            <Route path='/' element={<Home />} />
           </Route>
 
           {/* 404 */}

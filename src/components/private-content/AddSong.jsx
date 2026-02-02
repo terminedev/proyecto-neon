@@ -1,7 +1,13 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useAuth } from "contexts/AuthProvider";
 
-export default function AddSong() {
+export default function AddSong({
+    closeModal
+}) {
+
+    const { user, addSong } = useAuth();
+    const [error, setError] = useState(null);
 
     const [urlYTLocal, setUrlYTLocal] = useState('');
     const [YTOEobject, setYTOEobject] = useState(null);
@@ -15,7 +21,7 @@ export default function AddSong() {
     } = useForm();
 
     const handleDddedMusic = (songData) => {
-        const objFinal = {
+        const songDataFinal = {
             author_name: YTOEobject.author_name,
             author_url: YTOEobject.author_url,
             thumbnail_url: songData.thumbnail_url,
@@ -23,7 +29,13 @@ export default function AddSong() {
             idVideo: extractVideoID(urlYTLocal)
         };
 
-        console.log('Datos Musica -->', objFinal);
+        try {
+            setError(null);
+            addSong(user.uid, songDataFinal);
+            closeModal();
+        } catch (error) {
+            setError(error.message)
+        }
     };
 
     const extractVideoID = (url) => {
@@ -65,6 +77,8 @@ export default function AddSong() {
 
     return (
         <>
+            {error && <p>{error}</p>}
+            <button onClick={() => closeModal()}>Cancelar pedido</button>
             {/* Formulario de obtención de objeto YouTube OEmbed */}
 
             <form>
