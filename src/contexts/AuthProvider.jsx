@@ -110,10 +110,26 @@ export function AuthProvider({ children }) {
         setUser({ ...user, playlist: updatedList });
     };
 
+    const addSongToPlaylist = (playlistId, songData) => {
+        if (user) {
+            setUser(prevUser => ({
+                ...prevUser,
+                playlist: prevUser.playlist.map(list => {
+                    if (list.id === playlistId) {
 
+                        if (list.songs.some(song => song.idVideo === songData.idVideo)) throw new Error('La canción ya está en esta playlist');
+                        return { ...list, songs: [...list.songs, songData] };
+                    }
+                    return list;
+                })
+            }));
+        } else {
+            throw new Error('Usuario no autenticado');
+        }
+    };
 
     return (
-        <AuthContext.Provider value={{ user, registerNewUser, userLogin, addSong, addPlaylist, editSong, editPlaylist, deleteSong, deletePlaylist }}>
+        <AuthContext.Provider value={{ user, registerNewUser, userLogin, addSong, addPlaylist, editSong, editPlaylist, deleteSong, deletePlaylist, addSongToPlaylist }}>
             {children}
         </AuthContext.Provider>
     );

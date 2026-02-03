@@ -21,6 +21,7 @@ export default function AddPlaylist({
             setError(null);
             addPlaylist(user.uid, {
                 id: crypto.randomUUID(),
+                songs: [],
                 ...playlistData
             });
             closeModal();

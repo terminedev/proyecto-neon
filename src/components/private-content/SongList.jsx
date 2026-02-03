@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { useAuth } from 'contexts/AuthProvider';
 import EditSong from 'components/private-content/EditSong';
 import DeleteAction from 'components/private-content/DeleteAction';
+import AddToPlaylistModal from 'components/private-content/AddToPlaylistModal';
 
 export default function SongList() {
 
@@ -16,6 +17,11 @@ export default function SongList() {
     const [showModalBorrable, setShowModalBorrable] = useState({
         songData: null,
         showModalBorrable: false
+    });
+
+    const [showModalPlaylist, setShowModalPlaylist] = useState({
+        songData: null,
+        showModalPlaylist: false
     });
 
     const sortedSongs = useMemo(() => {
@@ -83,6 +89,16 @@ export default function SongList() {
                                 >
                                     Eliminar
                                 </button>
+
+                                <button
+                                    type="button"
+                                    onClick={() => setShowModalPlaylist({
+                                        songData: song,
+                                        showModalPlaylist: true
+                                    })}
+                                >
+                                    + Playlist
+                                </button>
                             </div>
                         </li>
                     ))}
@@ -106,6 +122,13 @@ export default function SongList() {
                     item={showModalBorrable.songData}
                     type="canción"
                     closeModal={() => setShowModalBorrable({ item: null, show: false })}
+                />
+            )}
+
+            {showModalPlaylist.showModalPlaylist && (
+                <AddToPlaylistModal
+                    songData={showModalPlaylist.songData}
+                    closeModal={() => setShowModalPlaylist({ songData: null, showModalPlaylist: false })}
                 />
             )}
         </section >
