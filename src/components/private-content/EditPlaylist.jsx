@@ -1,7 +1,10 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useAuth } from '../../contexts/AuthProvider';
 
-export default function EditPlaylist({ playlistData, onUpdate }) {
+export default function EditPlaylist({ playlistData, closeModal }) {
+    const [error, setError] = useState(null);
+    const { editPlaylist } = useAuth();
 
     const {
         register,
@@ -17,53 +20,52 @@ export default function EditPlaylist({ playlistData, onUpdate }) {
     }, [playlistData, reset]);
 
     const handleUpdate = (updatedData) => {
-        console.log('Datos actualizados -->', updatedData);
+        try {
+            setError(null);
+            editPlaylist({
+                ...updatedData,
+                id: playlistData.id
+            });
+            closeModal();
+        } catch (err) {
+            setError(err.message);
+        }
     };
 
     return (
         <form onSubmit={handleSubmit(handleUpdate)} noValidate>
             <h2>Editar Playlist</h2>
 
-            {/* Título PlayList */}
+            {error && <p>{error}</p>}
+
             <label htmlFor='recordTitlePlayList'>Nombre de la PlayList:</label>
             <input
                 type="text"
-                placeholder="Nombre de la playlist"
                 id='recordTitlePlayList'
-                {...register("recordTitlePlayList", {
-                    required: "El título es obligatorio",
-                })}
+                {...register("recordTitlePlayList", { required: "El título es obligatorio" })}
             />
-            {/* {errors.recordTitlePlayList && <span style={{ color: 'red' }}>{errors.recordTitlePlayList.message}</span>} */}
 
-            {/* Color PlayList */}
             <label htmlFor='recordColorPlayList'>Color de la PlayList:</label>
-            <input
-                type="color"
-                id='recordColorPlayList'
-                {...register("recordColorPlayList")}
-            />
+            <input type="color" id='recordColorPlayList' {...register("recordColorPlayList")} />
 
-            {/* Portada PlayList */}
             <label htmlFor='recordCoverPlayList'>URL de la Portada:</label>
             <input
                 type="text"
-                placeholder="URL de la imagen"
                 id='recordCoverPlayList'
-                {...register("recordCoverPlayList", {
-                    required: "La portada es obligatoria"
-                })}
+                {...register("recordCoverPlayList", { required: "La portada es obligatoria" })}
             />
-            {/* {errors.recordCoverPlayList && <span style={{ color: 'red' }}>{errors.recordCoverPlayList.message}</span>} */}
 
             <div>
                 <button type="button" onClick={() => reset()}>
-                    Restablecer Cambios
+                    Restablecer
                 </button>
                 <button type="submit">
                     Guardar Cambios
                 </button>
+                <button type="button" onClick={closeModal}>
+                    Cancelar
+                </button>
             </div>
         </form>
     );
-};
+}

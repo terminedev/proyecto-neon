@@ -70,8 +70,39 @@ export function AuthProvider({ children }) {
         }
     };
 
+    const editSong = (newSongData) => {
+        if (user) {
+            setUser(prevUser => ({
+                ...prevUser,
+                songList: prevUser.songList.map(song =>
+                    song.idVideo === newSongData.idVideo ? { ...song, ...newSongData } : song
+                )
+            }));
+
+            return newSongData;
+        } else {
+            throw new Error('Usuario no autenticado');
+        }
+    };
+
+    const editPlaylist = (newPlaylistData) => {
+        if (user) {
+            setUser(prevUser => ({
+                ...prevUser,
+                playlist: prevUser.playlist.map(pl =>
+                    pl.id === newPlaylistData.id ? { ...pl, ...newPlaylistData } : pl
+                )
+            }));
+
+            return newPlaylistData;
+        } else {
+            throw new Error('Usuario no autenticado');
+        }
+    };
+
+
     return (
-        <AuthContext.Provider value={{ user, registerNewUser, userLogin, addSong, addPlaylist }}>
+        <AuthContext.Provider value={{ user, registerNewUser, userLogin, addSong, addPlaylist, editSong, editPlaylist }}>
             {children}
         </AuthContext.Provider>
     );

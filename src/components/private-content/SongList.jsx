@@ -1,10 +1,16 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { useAuth } from 'contexts/AuthProvider';
+import EditSong from 'components/private-content/EditSong';
 
 export default function SongList() {
 
     const { user } = useAuth();
     const [sortingType, setSortingType] = useState('date-asc');
+
+    const [showModalEditable, setShowModalEditable] = useState({
+        songData: null,
+        showModalEditable: false
+    });
 
     const sortedSongs = useMemo(() => {
         if (!user?.songList) return [];
@@ -55,6 +61,15 @@ export default function SongList() {
                             <li key={song.idVideo}>
                                 <strong>{song.title}</strong> — <small>{song.author_name}</small>
                                 <img src={song.thumbnail_url} />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowModalEditable({
+                                        songData: song,
+                                        showModalEditable: true
+                                    })}
+                                >
+                                    Editar
+                                </button>
                             </li>
                         ))}
                     </ul>
@@ -63,6 +78,16 @@ export default function SongList() {
                         No hay canciones registradas.
                     </p>
                 )
+            }
+
+            {
+                showModalEditable.showModalEditable && <EditSong
+                    songData={showModalEditable.songData}
+                    closeModal={() => setShowModalEditable({
+                        songData: null,
+                        showModalEditable: false
+                    })}
+                />
             }
         </section >
     );

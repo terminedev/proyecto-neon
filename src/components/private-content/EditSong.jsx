@@ -1,7 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useAuth } from "contexts/AuthProvider";
 
-export default function EditSong({ songData, onUpdate }) {
+export default function EditSong({ songData, closeModal }) {
+
+    const [error, setError] = useState(null);
+    const { editSong } = useAuth();
 
     const {
         register,
@@ -25,14 +29,20 @@ export default function EditSong({ songData, onUpdate }) {
             author_url: songData.author_url
         };
 
-        console.log('Datos Actualizados -->', finalObj);
+        try {
+            setError(null);
+            editSong(finalObj);
+            closeModal();
+        } catch (error) {
+            setError(error.message)
+        }
     };
 
     return (
         <form onSubmit={handleSubmit(handleUpdate)} noValidate>
 
             {/* 1. Información de solo lectura (Bloqueada) */}
-            <fieldset style={{ opacity: 0.7, backgroundColor: '#f9f9f9' }}>
+            <fieldset>
                 <legend>Información de Origen (No editable)</legend>
 
                 <p><strong>ID del Vídeo:</strong> {songData?.idVideo}</p>
@@ -82,10 +92,12 @@ export default function EditSong({ songData, onUpdate }) {
             </section>
 
             <div className="actions">
+                {error && <p>{error}</p>}
                 <button type="button" onClick={() => reset()}>
                     Deshacer Cambios
                 </button>
                 <button type="submit">Actualizar Canción</button>
+                <button type="button" onClick={() => closeModal()}>Cancelar pedido</button>
             </div>
         </form>
     );

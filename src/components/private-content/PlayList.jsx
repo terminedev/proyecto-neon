@@ -1,12 +1,18 @@
 import { useState, useMemo } from 'react';
 import { useAuth } from '../../contexts/AuthProvider';
+import EditPlaylist from './EditPlaylist';
 
 export default function PlayList() {
-
     const { user } = useAuth();
     const [sortingType, setSortingType] = useState('date-asc');
 
+    const [modalConfig, setModalConfig] = useState({
+        playlistData: null,
+        isOpen: false
+    });
+
     const sortedPlaylist = useMemo(() => {
+        if (!user?.playlist) return [];
         return [...user.playlist].sort((a, b) => {
             switch (sortingType) {
                 case 'title-asc':
@@ -27,10 +33,8 @@ export default function PlayList() {
         <section>
             <h2>Mi Playlist</h2>
 
-            {/* Controles de Ordenación */}
-            {
-                sortedPlaylist.length > 0 &&
-                < section >
+            {sortedPlaylist.length > 0 && (
+                <section>
                     <label htmlFor="sort-select">Ordenamiento:</label>
                     <select
                         id="sort-select"
@@ -43,25 +47,34 @@ export default function PlayList() {
                         <option value="date-desc">Fecha actual</option>
                     </select>
                 </section>
-            }
+            )}
 
-            {/* Renderizado de la lista */}
-            {
-                sortedPlaylist.length > 0 ? (
-                    <ul>
-                        {sortedPlaylist.map((playlist) => (
-                            <li key={playlist.id}>
-                                <strong>{playlist.recordTitlePlayList}</strong> — <small>{playlist.recordColorPlayList}</small>
-                                <img src={playlist.recordCoverPlayList} />
-                            </li>
-                        ))}
-                    </ul>
-                ) : (
-                    <p>
-                        No hay playlist registradas.
-                    </p>
-                )
-            }
+            {sortedPlaylist.length > 0 ? (
+                <ul>
+                    {sortedPlaylist.map((playlist) => (
+                        <li key={playlist.id}>
+                            <strong>{playlist.recordTitlePlayList}</strong> — <small>{playlist.recordColorPlayList}</small>
+                            <img src={playlist.recordCoverPlayList} alt={playlist.recordTitlePlayList} style={{ width: '50px' }} />
+
+                            <button
+                                type="button"
+                                onClick={() => setModalConfig({ playlistData: playlist, isOpen: true })}
+                            >
+                                Editar
+                            </button>
+                        </li>
+                    ))}
+                </ul>
+            ) : (
+                <p>No hay playlist registradas.</p>
+            )}
+
+            {modalConfig.isOpen && (
+                <EditPlaylist
+                    playlistData={modalConfig.playlistData}
+                    closeModal={() => setModalConfig({ playlistData: null, isOpen: false })}
+                />
+            )}
         </section>
     );
-};
+}
