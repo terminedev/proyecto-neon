@@ -100,9 +100,20 @@ export function AuthProvider({ children }) {
         }
     };
 
+    const deleteSong = (songToDelete) => {
+        const updatedList = user.songList.filter(song => song.idVideo !== songToDelete.idVideo);
+        setUser({ ...user, songList: updatedList });
+    };
+
+    const deletePlaylist = (playlistToDelete) => {
+        const updatedList = user.playlist.filter(list => list.id !== playlistToDelete.id);
+        setUser({ ...user, playlist: updatedList });
+    };
+
+
 
     return (
-        <AuthContext.Provider value={{ user, registerNewUser, userLogin, addSong, addPlaylist, editSong, editPlaylist }}>
+        <AuthContext.Provider value={{ user, registerNewUser, userLogin, addSong, addPlaylist, editSong, editPlaylist, deleteSong, deletePlaylist }}>
             {children}
         </AuthContext.Provider>
     );

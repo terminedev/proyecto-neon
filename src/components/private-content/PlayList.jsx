@@ -1,12 +1,18 @@
 import { useState, useMemo } from 'react';
 import { useAuth } from '../../contexts/AuthProvider';
 import EditPlaylist from './EditPlaylist';
+import DeleteAction from 'components/private-content/DeleteAction';
 
 export default function PlayList() {
     const { user } = useAuth();
     const [sortingType, setSortingType] = useState('date-asc');
 
     const [modalConfig, setModalConfig] = useState({
+        playlistData: null,
+        isOpen: false
+    });
+
+    const [showModalBorrable, setShowModalBorrable] = useState({
         playlistData: null,
         isOpen: false
     });
@@ -62,6 +68,13 @@ export default function PlayList() {
                             >
                                 Editar
                             </button>
+
+                            <button
+                                type="button"
+                                onClick={() => setShowModalBorrable({ playlistData: playlist, isOpen: true })}
+                            >
+                                Eliminar
+                            </button>
                         </li>
                     ))}
                 </ul>
@@ -73,6 +86,14 @@ export default function PlayList() {
                 <EditPlaylist
                     playlistData={modalConfig.playlistData}
                     closeModal={() => setModalConfig({ playlistData: null, isOpen: false })}
+                />
+            )}
+
+            {showModalBorrable.isOpen && (
+                <DeleteAction
+                    item={showModalBorrable.playlistData}
+                    type="playlist"
+                    closeModal={() => setShowModalBorrable({ playlistData: null, isOpen: false })}
                 />
             )}
         </section>
