@@ -53,12 +53,12 @@
 ✓ * Buscador global por nombre (canciones y playlists).
 ✓ * Ordenamiento local de listas (alfabético, fecha, etc.).
 ✓ * Login / Registro / Logout (Público)
-* Página estática informativa.
+✓ * Página estática informativa.
 
 
 * **Restricciones de Negocio:**
-* Límite global: 7000 canciones.
-* Límite global: 1000 playlists.
-* Límite por playlist: 1000 canciones.
-* Paginación o "Cargar más": Implementar una paginación (de 20 en 20) o un botón "Ver más" es casi obligatorio técnicamente para esos volúmenes.
+✓ * Límite global: 7000 canciones.
+✓ * Límite global: 1000 playlists.
+✓ * Límite por playlist: 1000 canciones.
+✓ * Paginación o "Cargar más": Implementar una paginación (de 20 en 20) o un botón "Ver más" es casi obligatorio técnicamente para esos volúmenes.
 
