@@ -12,7 +12,7 @@ export default function Layout() {
                 <Logout />
             </header>
 
-            <main className="p-6 mx-auto max-w-7xl">
+            <main>
                 <Outlet />
             </main>
 

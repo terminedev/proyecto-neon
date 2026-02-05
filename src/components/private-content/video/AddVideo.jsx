@@ -1,10 +1,26 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import { getOEmbedDataYT, extractVideoID } from 'services/YTOEmbed';
 
 export default function AddVideo() {
 
     const [showForm, setShowForm] = useState(false);
+    const { navigate } = useNavigate();
+
+    const [asynObjectFetchVideoData, setAsynObjectFetchVideoData] = useState({
+        data: null,
+        isLoading: false,
+        error: null
+    });
+
+    const [asynObjectAddVideo, setAsynObjectAddVideo] = useState({
+        data: null,
+        isLoading: false,
+        error: null
+    });
+
+
 
     const {
         register,
@@ -26,7 +42,7 @@ export default function AddVideo() {
 
     const watchedThumbnail = watch('thumbnail_url');
 
-    const handleFetchVideoData = (e) => {
+    const handleFetchVideoData = async (e) => {
         e.preventDefault();
 
         const url = getValues('original_url');
@@ -35,41 +51,44 @@ export default function AddVideo() {
 
         const videoId = extractVideoID(url);
 
-        if (!videoId) return console.error('URL de YouTube no válida')
+        if (!videoId) return console.warn('URL de YouTube no válida')
 
-        const getOembedData = async () => {
-            try {
-                const data = await getOEmbedDataYT(url);
+        try {
+            setAsynObjectFetchVideoData({ data: null, isLoading: true, error: null });
 
-                if (!data) return console.warn('No se encontró vídeo.');
+            const data = await getOEmbedDataYT(url);
 
-                reset({
-                    original_url: url,
-                    original_video_id_url: videoId,
-                    author_name: data.author_name,
-                    title: data.title,
-                    thumbnail_url: data.thumbnail_url,
-                    description: '',
-                });
-                setShowForm(true);
+            reset({
+                original_url: url,
+                original_video_id_url: videoId,
+                author_name: data.author_name,
+                title: data.title,
+                thumbnail_url: data.thumbnail_url,
+                description: '',
+            });
 
-            } catch (error) {
-                setShowForm(false);
-            }
+            setShowForm(true);
+
+            setAsynObjectFetchVideoData({ data: data, isLoading: false, error: null });
+
+        } catch (error) {
+            setAsynObjectFetchVideoData({ data: null, isLoading: false, error: error });
         }
-
-        getOembedData();
     };
 
-    const handleAggregate = async (data) => {
+    const handleAggregate = async (dataToAdd) => {
         try {
-            console.log('Objeto a agregar -->', data);
-            await addVideoDB({
-                user_id: user.uid, // <-- AuthContext;
-                ...data
-            }) // <-- Función Firebase 
+            setAsynObjectAddVideo({ data: null, isLoading: true, error: null });
+
+            const data = await addVideoDB(dataToAdd); // <-- Función Firebase
+            if (data.success) navigate('/');
+
         } catch (error) {
-        } finally {
+            setAsynObjectAddVideo({
+                data: null,
+                isLoading: false,
+                error: error
+            });
         }
     };
 
@@ -89,6 +108,10 @@ export default function AddVideo() {
                             required: 'La URL es requerida',
                         })}
                     />
+
+                    {
+                        asynObject.isLoading ? <p>Logueándose...</p> : <button type="submit">Entrar</button>
+                    }
                     <button type='submit'>Obtener vídeo</button>
                 </fieldset>
             </form>

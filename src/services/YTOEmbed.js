@@ -2,10 +2,32 @@
 export async function getOEmbedDataYT(url) {
     try {
         const response = await fetch(`https://noembed.com/embed?url=${url}`);
-        const data = await response.json();
-        return data;
+
+        if (response.ok) {
+            const data = await response.json();
+            return data;
+        }
+
+        const errorData = await response.json().catch(() => null);
+
+        switch (response.status) {
+            case 400:
+                console.error("Error de validación:", errorData);
+                throw new Error(errorData.message || "Datos incorrectos");
+            case 401:
+                console.warn("Sesión expirada");
+                throw new Error("No autorizado");
+            case 404:
+                throw new Error("El recurso que buscas no existe");
+            case 500:
+                throw new Error("Error interno del servidor, intenta más tarde");
+            default:
+                throw new Error(`Error inesperado: ${response.status}`);
+        }
+
     } catch (error) {
-        console.error(error);
+        console.error("Hubo un problema con la petición:", error.message);
+        throw error;
     }
 }
 
