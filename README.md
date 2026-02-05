@@ -45,7 +45,7 @@
 
 
 * **Gestión de Contenido en Playlist:**
-* Agregar canciones a una playlist específica.
+✓ * Agregar canciones a una playlist específica.
 * Eliminar canciones de una playlist específica.
 
 
