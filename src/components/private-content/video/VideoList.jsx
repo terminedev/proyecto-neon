@@ -5,7 +5,7 @@ export default function VideoList({ videos }) {
     return (
         <ul>
             {videos.map((video) => (
-                <li key={video.originalUrl}>
+                <li key={video.original_url}>
                     <VideoCard
                         videoData={video}
                     />
