@@ -50,9 +50,9 @@
 
 
 * **Herramientas de UI/UX:**
-* Buscador global por nombre (canciones y playlists).
-* Ordenamiento local de listas (alfabético, fecha, etc.).
-* Login / Registro / Logout (Público)
+✓ * Buscador global por nombre (canciones y playlists).
+✓ * Ordenamiento local de listas (alfabético, fecha, etc.).
+✓ * Login / Registro / Logout (Público)
 * Página estática informativa.
 
 

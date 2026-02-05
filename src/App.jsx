@@ -7,7 +7,6 @@ export default function App() {
     <AuthProvider>
 
       <h1>Proyecto Neón</h1>
-      <AddVideo />
 
       {/* <BrowserRouter>
         <Routes>
