@@ -23,18 +23,16 @@ export default function Login() {
             setAsynObject({ data: null, isLoading: true, error: null });
 
             const data = await loginDB(email, password);
-            setAsynObject(prevState => ({ ...prevState, data: data }));
-
             if (data.success) navigate('/');
 
         } catch (error) {
-            setAsynObject(prevState => ({ ...prevState, error: error }));
-        } finally {
-            setAsynObject(prevState => ({ ...prevState, isLoading: false }));
-        };
+            setAsynObject({
+                data: null,
+                isLoading: false,
+                error: error
+            });
+        }
     };
-
-    if (asynObject.isLoading) return (<p>Logueándose...</p>)
 
     return (
         <section>
@@ -62,7 +60,9 @@ export default function Login() {
 
                 {asynObject.error && <p>*{getFirebaseErrorMessage(asynObject.error.code)}</p>}
 
-                <button type="submit">Entrar</button>
+                {
+                    asynObject.isLoading ? <p>Logueándose...</p> : <button type="submit">Entrar</button>
+                }
             </form>
         </section>
     );

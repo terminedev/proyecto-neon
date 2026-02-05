@@ -1,7 +1,24 @@
 export const getFirebaseErrorMessage = (errorCode) => {
     switch (errorCode) {
 
-        // --- AUTENTICACIÓN: LOGIN Y REGISTRO ---
+        // --- REGISTRO DE USUARIOS ---
+
+        case 'auth/email-already-in-use':
+            return 'Este correo electrónico ya está registrado. Intenta iniciar sesión.';
+
+        case 'auth/weak-password':
+            return 'La contraseña es muy débil. Debe tener al menos 6 caracteres.';
+
+        case 'auth/operation-not-allowed':
+            return 'El método de registro seleccionado no está habilitado. Contacta al soporte.';
+
+        case 'auth/account-exists-with-different-credential':
+            return 'Ya existe una cuenta con este correo, pero fue creada con otro método (Google, Facebook, etc.).';
+
+        case 'auth/credential-already-in-use':
+            return 'Esta cuenta (Google/Facebook) ya está vinculada a otro usuario.';
+
+        // --- INICIO DE SESIÓN / AUTENTICACIÓN ---
 
         case 'auth/invalid-email':
             return 'El formato del correo electrónico no es válido.';
@@ -18,24 +35,21 @@ export const getFirebaseErrorMessage = (errorCode) => {
         case 'auth/invalid-credential':
             return 'Las credenciales no son válidas o han expirado.';
 
-        case 'auth/email-already-in-use':
-            return 'Ya existe una cuenta registrada con este correo electrónico.';
-
-        case 'auth/weak-password':
-            return 'La contraseña es muy débil. Debe tener al menos 6 caracteres.';
-
         case 'auth/requires-recent-login':
             return 'Por seguridad, necesitas volver a iniciar sesión para realizar esta acción.';
 
         case 'auth/popup-closed-by-user':
             return 'El proceso de inicio de sesión fue cancelado antes de terminar.';
 
+        case 'auth/popup-blocked':
+            return 'El navegador bloqueó la ventana emergente. Por favor, permítela e inténtalo de nuevo.';
+
         // --- PROTECCIÓN Y LÍMITES ---
 
         case 'auth/too-many-requests':
             return 'Demasiados intentos fallidos. Por favor, espera unos minutos e inténtalo de nuevo.';
 
-        // --- ERRORES CRÍTICOS / SISTEMA ---
+        // --- ERRORES DE SISTEMA / RED ---
 
         case 'auth/network-request-failed':
             return 'Error de conexión. Por favor, revisa tu conexión a internet.';

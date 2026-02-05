@@ -24,10 +24,24 @@ export function AuthProvider({ children }) {
         }
     }, []);
 
+    const registerDB = useCallback(async (email = '', password = '') => {
+        try {
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            const newUser = userCredential.user;
+
+            setUser(newUser);
+            return { success: true };
+        } catch (error) {
+            console.error("Error al registrar usuario:", error.code, error.message);
+            throw error;
+        }
+    }, []);
+
     const contextValue = useMemo(() => ({
         user,
         setUser,
-        loginDB
+        loginDB,
+        registerDB
     }), [user, setUser, loginDB]);
 
     return (

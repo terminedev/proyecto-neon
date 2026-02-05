@@ -1,31 +1,68 @@
-export default function Register() {
+import { useState } from "react";
+import { useAuth } from 'contexts/AuthProvider';
+import { useNavigate } from "react-router-dom";
+import { getFirebaseErrorMessage } from 'utils/helpers/getFirebaseErrorMessage';
 
+export default function Register() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
+    const { registerDB } = useAuth();
+    const navigate = useNavigate();
+
+    const [asynObject, setAsynObject] = useState({
+        data: null,
+        isLoading: false,
+        error: null
+    });
+
     const handleRecord = async (e) => {
         e.preventDefault();
+
         try {
-            await signup(email, password); // <-- Función Firebase
-        } catch (err) {
+            setAsynObject({ data: null, isLoading: true, error: null });
+
+            const data = await registerDB(email, password);
+            if (data.success) navigate('/');
+
+        } catch (error) {
+            setAsynObject({
+                data: null,
+                isLoading: false,
+                error: error
+            });
         }
     };
 
     return (
         <section>
-            <h2>Registrarse:</h2>
+            <h2>Registrarse </h2>
             <form onSubmit={handleRecord}>
+                <label htmlFor="email">Correo Eléctonico: </label>
                 <input
+                    id="email"
+                    name="email"
                     type="email"
-                    placeholder="tuemail@ejemplo.com"
+                    placeholder="email@ejemplo.com"
                     onChange={(e) => setEmail(e.target.value)}
                 />
+
+                <hr />
+
+                <label htmlFor="password">Contraseña: </label>
                 <input
+                    id="password"
+                    name="password"
                     type="password"
                     placeholder="Contraseña"
                     onChange={(e) => setPassword(e.target.value)}
                 />
-                <button type="submit">Registrarse</button>
+
+                {asynObject.error && <p>*{getFirebaseErrorMessage(asynObject.error.code)}</p>}
+
+                {
+                    asynObject.isLoading ? <p>Registrándose...</p> : <button type="submit">Entrar</button>
+                }
             </form>
         </section>
     );
