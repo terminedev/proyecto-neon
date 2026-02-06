@@ -8,6 +8,8 @@ import styles from 'styles/Grid.module.css';
 
 export default function MyPlaylists() {
 
+    document.title = "Mis Playlists | Proyecto Neón | Gastøn ♱érmine";
+
     const { getPlaylistDB } = useAuth();
 
     const [asyncPlaylistsData, setAsyncPlaylistsData] = useState({

@@ -5,6 +5,9 @@ import { getFirebaseErrorMessage } from 'utils/helpers/getFirebaseErrorMessage';
 import { useAuth } from 'contexts/AuthProvider';
 
 export default function EditPlaylist() {
+
+    document.title = "Editar Playlist | Proyecto Neón | Gastøn ♱érmine";
+
     const { playlist_id } = useParams();
     const { getPlaylistDB, updatePlaylistDB } = useAuth();
 

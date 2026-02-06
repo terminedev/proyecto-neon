@@ -9,6 +9,8 @@ import styles from 'styles/Form.module.css';
 
 export default function AddVideo() {
 
+    document.title = "Añadir Vídeo | Proyecto Neón | Gastøn ♱érmine";
+
     const [showForm, setShowForm] = useState(false);
     const navigate = useNavigate();
     const { addVideoDB } = useAuth();

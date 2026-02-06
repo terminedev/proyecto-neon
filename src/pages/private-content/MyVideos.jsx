@@ -6,6 +6,8 @@ import VideoCard from "components/private-content/video/VideoCard";
 
 export default function MyVideos() {
 
+    document.title = "Mis Vídeos | Proyecto Neón | Gastøn ♱érmine";
+
     const { getAllVideos } = useAuth();
 
     const [asyncVideosData, setAsyncVideosData] = useState({

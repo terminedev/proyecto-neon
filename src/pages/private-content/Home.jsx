@@ -9,6 +9,8 @@ import styles from 'styles/Grid.module.css';
 
 export default function Home() {
 
+    document.title = "Home | Proyecto Neón | Gastøn ♱érmine";
+
     const { getLatestVideos, getLatestPlaylist } = useAuth();
 
     const [asyncHomeData, setAsyncHomeData] = useState({

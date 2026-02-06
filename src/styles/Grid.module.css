@@ -1,14 +1,57 @@
+/* --- GRID SISTEMA --- */
 .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+    gap: 25px;
     list-style: none;
     padding: 0;
+    margin: 0;
 }
+
 
 .sectionHeader {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 2rem 0 1rem;
+    margin: 3rem 0 1.5rem;
+    border-left: 4px solid var(--neon-pink);
+    padding-left: 15px;
+}
+
+.sectionHeader h2 {
+    font-size: 1.8rem;
+    margin: 0;
+    color: var(--text-main);
+}
+
+
+@media (max-width: 600px) {
+    .sectionHeader {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+        margin: 2rem 0 1rem;
+    }
+
+    .grid {
+        gap: 15px;
+    }
+
+    .sectionHeader h2 {
+        font-size: 1.4rem;
+    }
+}
+
+.grid>li {
+    background: var(--card-bg);
+    border: 1px solid #333;
+    padding: 20px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.grid>li:hover {
+    border-color: var(--neon-cyan);
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.1);
+    transform: translateY(-5px);
 }

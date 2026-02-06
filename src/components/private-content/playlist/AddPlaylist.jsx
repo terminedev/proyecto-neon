@@ -8,6 +8,8 @@ import styles from 'styles/Form.module.css';
 
 export default function AddPlaylist() {
 
+    document.title = "Añadir Playlist | Proyecto Neón | Gastøn ♱érmine";
+
     const navigate = useNavigate();
     const { addPlaylistDB } = useAuth();
 

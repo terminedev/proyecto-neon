@@ -8,6 +8,8 @@ export default function Access() {
 
     const [isLogin, setIsLogin] = useState(true);
 
+    document.title = "Acceder | Proyecto Neón | Gastøn ♱érmine";
+
     return (
         <section>
             <h2>{isLogin ? 'Bienvenido de nuevo' : 'Crear Cuenta'}</h2>

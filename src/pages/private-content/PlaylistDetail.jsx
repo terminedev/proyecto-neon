@@ -7,6 +7,8 @@ import VideoCard from "components/private-content/video/VideoCard";
 
 export default function PlaylistDetail() {
 
+    document.title = "Detalle Playlist | Proyecto Neón | Gastøn ♱érmine";
+
     const { playlist_id } = useParams();
 
     const {

@@ -6,6 +6,9 @@ import { useAuth } from 'contexts/AuthProvider';
 
 
 export default function EditVideo() {
+
+    document.title = "Editar Vídeo | Proyecto Neón | Gastøn ♱érmine";
+
     const { video_id } = useParams();
     const navigate = useNavigate();
 
