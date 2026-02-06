@@ -8,6 +8,8 @@ import {
 
 const AuthContext = createContext();
 
+const MAX_LIMIT = 20;
+
 export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
 
@@ -58,6 +60,13 @@ export function AuthProvider({ children }) {
         if (!user) throw new Error("Usuario no autenticado");
 
         try {
+            const q = query(collection(db, 'videos'), where("user_id", "==", user.uid));
+            const snapshot = await getCountFromServer(q);
+
+            if (snapshot.data().count >= MAX_LIMIT) {
+                throw new Error(`Límite alcanzado: No puedes tener más de ${MAX_LIMIT} videos.`);
+            }
+
             await addDoc(collection(db, 'videos'), {
                 user_id: user.uid,
                 created_at: serverTimestamp(),
@@ -75,9 +84,17 @@ export function AuthProvider({ children }) {
         if (!user) throw new Error("Usuario no autenticado");
 
         try {
+            const q = query(collection(db, 'playlists'), where("user_id", "==", user.uid));
+            const snapshot = await getCountFromServer(q);
+
+            if (snapshot.data().count >= MAX_LIMIT) {
+                throw new Error(`Límite alcanzado: No puedes tener más de ${MAX_LIMIT} playlists.`);
+            }
+
             await addDoc(collection(db, 'playlists'), {
                 user_id: user.uid,
                 created_at: serverTimestamp(),
+                video_ids: [],
                 ...dataToAdd
             });
 
@@ -144,9 +161,21 @@ export function AuthProvider({ children }) {
             const docSnap = await getDoc(docRef);
 
             if (docSnap.exists()) {
+                const playlistData = docSnap.data();
+                const currentVideos = playlistData.video_ids || [];
+
+                if (currentVideos.length >= MAX_LIMIT) {
+                    throw new Error(`Esta playlist ya tiene el máximo de ${MAX_LIMIT} canciones.`);
+                }
+
+                if (currentVideos.includes(video_id)) {
+                    throw new Error("El video ya está en esta playlist.");
+                }
+
                 await updateDoc(docRef, {
                     video_ids: arrayUnion(video_id)
                 });
+                return { success: true };
             } else {
                 console.log("No se encontró la playlist con ese ID");
             }
@@ -305,6 +334,44 @@ export function AuthProvider({ children }) {
         }
     }, [user]);
 
+    const getVideosAccordingToPlaylist = useCallback(async (playlist_id) => {
+        try {
+            const playlistRef = doc(db, "playlists", playlist_id);
+            const playlistSnap = await getDoc(playlistRef);
+
+            if (!playlistSnap.exists()) {
+                console.warn("No se encontró la playlist con ese ID");
+                return [];
+            }
+
+            const playlistData = playlistSnap.data();
+            const videoIds = playlistData.video_ids || [];
+
+            if (videoIds.length === 0) return [];
+
+            const videoPromises = videoIds.map(async (videoId) => {
+                const videoRef = doc(db, "videos", videoId);
+                const videoSnap = await getDoc(videoRef);
+
+                if (videoSnap.exists()) {
+                    return {
+                        video_id: videoSnap.id,
+                        ...videoSnap.data()
+                    };
+                }
+                return null;
+            });
+
+            const videosRaw = await Promise.all(videoPromises);
+
+            return videosRaw.filter(video => video !== null);
+
+        } catch (error) {
+            console.error("Error al obtener videos de la playlist:", error);
+            throw error;
+        }
+    }, []);
+
 
     // --------------------------------------
 
@@ -326,7 +393,8 @@ export function AuthProvider({ children }) {
         deletePlaylistDB,
         addSongToPlaylist,
         removeSongFromPlaylist,
-        getAllVideos
+        getAllVideos,
+        getVideosAccordingToPlaylist
     }), [
         user,
         setUser,
@@ -345,7 +413,8 @@ export function AuthProvider({ children }) {
         getPlaylistByIdDB,
         updatePlaylistDB,
         removeSongFromPlaylist,
-        getAllVideos
+        getAllVideos,
+        getVideosAccordingToPlaylist
     ]);
     return (
         <AuthContext.Provider value={contextValue}>

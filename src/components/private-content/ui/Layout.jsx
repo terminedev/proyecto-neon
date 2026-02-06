@@ -8,6 +8,7 @@ export default function Layout() {
             <header>
                 <Link to="/">Home</Link>
                 {/* <Seeker onSearch={handleSearch} /> */}
+                <h1>Proyecto Neón</h1>
                 <Logout />
             </header>
 

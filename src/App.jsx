@@ -6,7 +6,7 @@ export default function App() {
   return (
     <AuthProvider>
 
-      <h1>Proyecto Neón</h1>
+
 
       {/* <BrowserRouter>
         <Routes>
