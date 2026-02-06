@@ -1,5 +1,4 @@
-import { Link } from "react-router-dom";
-import { Seeker } from 'components/private-content/ui/Seeker';
+import { Link, Outlet } from "react-router-dom";
 import { Logout } from 'components/public-content/access/Logout';
 
 export default function Layout() {
@@ -8,7 +7,7 @@ export default function Layout() {
         <>
             <header>
                 <Link to="/">Home</Link>
-                <Seeker />
+                {/* <Seeker onSearch={handleSearch} /> */}
                 <Logout />
             </header>
 
@@ -17,7 +16,6 @@ export default function Layout() {
             </main>
 
             <footer>
-
             </footer>
         </>
     );
