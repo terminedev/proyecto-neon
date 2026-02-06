@@ -1,15 +1,15 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from 'contexts/AuthProvider';
 
-import Access from 'components/public-content/access/Access';
-import About from 'components/public-content/About';
-import ProtectedRoute from 'components/ProtectedRoute';
-import Layout from 'components/Layout';
-import Home from 'components/private-content/Home';
-import MyPlaylists from 'components/private-content/playlist/MyPlaylists';
-import MyVideos from 'components/private-content/video/MyVideos';
-import PlaylistDetail from 'components/private-content/playlist/PlaylistDetail';
+import Access from 'pages/public-content/Access';
+import About from 'components/public-content/access/About';
+import Home from 'pages/private-content/Home';
+import MyPlaylists from 'pages/private-content/MyPlaylists';
+import MyVideos from 'pages/private-content/MyVideos';
+import PlaylistDetail from 'pages/private-content/PlaylistDetail';
 import AddPlaylist from 'components/private-content/playlist/AddPlaylist';
+import ProtectedRoute from 'routes/ProtectedRoute';
+import Layout from 'components/private-content/ui/Layout';
 import AddVideo from 'components/private-content/video/AddVideo';
 import EditPlaylist from 'components/private-content/playlist/EditPlaylist';
 import EditVideo from 'components/private-content/video/EditVideo';

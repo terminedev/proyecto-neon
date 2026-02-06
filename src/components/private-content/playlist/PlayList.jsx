@@ -1,3 +1,5 @@
+import PlayListCard from 'components/private-content/playlist/PlaylistCard';
+
 export default function PlayList({ playlist }) {
 
     if (!playlist || playlist.length <= 0) return <p>No hay playlist qué mostrar.</p>;

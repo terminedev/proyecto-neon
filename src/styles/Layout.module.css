@@ -1,0 +1,25 @@
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--neon-cyan);
+    padding-bottom: 1rem;
+    margin-bottom: 2rem;
+}
+
+.header h1 {
+    color: var(--neon-cyan);
+    text-shadow: 0 0 10px var(--neon-cyan);
+    font-size: 1.5rem;
+}
+
+.navLinks {
+    display: flex;
+    gap: 15px;
+}

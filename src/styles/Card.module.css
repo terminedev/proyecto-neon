@@ -1,0 +1,41 @@
+.card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.2s;
+    border: 1px solid #333;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    border-color: var(--neon-pink);
+}
+
+.thumbnail {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+}
+
+.content {
+    padding: 15px;
+}
+
+.footer {
+    padding: 10px 15px;
+    display: flex;
+    gap: 10px;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.button {
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    border: none;
+    background: var(--neon-cyan);
+    color: #000;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 0.8rem;
+}
