@@ -1,13 +1,29 @@
+import { useState } from 'react';
+import { getFirebaseErrorMessage } from 'utils/helpers/getFirebaseErrorMessage';
+import { useAuth } from 'contexts/AuthProvider'
+
 export default function DeletePlaylist({ playlist_id, onClose }) {
+
+    const { deletePlaylistDB } = useAuth();
+
+    const [asyncDeleteState, setAsyncDeleteState] = useState({
+        isLoading: false,
+        error: null
+    });
 
     const handleDelete = async () => {
         try {
+            setAsyncDeleteState({ isLoading: true, error: null });
 
-            deletePlaylistDB(playlist_id); // <-- Función Firebase. 
+            await deletePlaylistDB(playlist_id);
+
             onClose();
 
         } catch (error) {
-
+            setAsyncDeleteState({
+                isLoading: false,
+                error: error
+            });
         }
     };
 
@@ -17,18 +33,30 @@ export default function DeletePlaylist({ playlist_id, onClose }) {
             <h3>¿Estás seguro?</h3>
             <p>Esta acción no se puede deshacer.</p>
 
-            <button
-                onClick={onClose}
-            >
-                Cancelar
-            </button>
+            {asyncDeleteState.error &&
+                <>
+                    <p>
+                        *{getFirebaseErrorMessage(asyncDeleteState.error.code)}
+                    </p>
 
-            <button
-                onClick={handleDelete}
-            >
-                Borrar
-            </button>
+                    {
+                        asyncDeleteState.isLoading
+                            ? <p>Borrando...</p>
+                            : <>
+                                <button
+                                    onClick={onClose}
+                                >
+                                    Cancelar
+                                </button>
+                                <button
+                                    onClick={handleDelete}
+                                >
+                                    Borrar
+                                </button>
+                            </>
+                    }
+                </>
+            }
         </dialog>
     );
 };
-

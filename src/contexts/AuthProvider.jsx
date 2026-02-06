@@ -88,6 +88,116 @@ export function AuthProvider({ children }) {
         }
     }, [user]);
 
+    const getLatestVideos = useCallback(async () => {
+        if (!user) throw new Error("Usuario no autenticado");
+
+        try {
+            const q = query(
+                collection(db, "videos"),
+                where("user_id", "==", user.uid),
+                orderBy('created_at', 'desc'),
+                limit(7)
+            )
+
+            const querySnapshot = await getDocs(q);
+
+            const list = [];
+
+            querySnapshot.forEach((doc) => list.push({
+                video_id: doc.id,
+                ...doc.data()
+            }));
+
+            return list;
+        } catch (error) {
+            console.error("Error al obtener los últimos 7 vídeos:", error.code, error.message);
+            throw error;
+        }
+    }, [user]);
+
+    const getPlaylistDB = useCallback(async () => {
+        try {
+            const q = query(collection(db, "playlists"), where("user_id", "==", user.uid));
+
+            const querySnapshot = await getDocs(q);
+
+            const list = [];
+
+            querySnapshot.forEach((doc) => list.push({
+                playlist_id: doc.id,
+                ...doc.data()
+            }));
+
+            return list;
+        } catch (error) {
+            console.error("Error al obtener la playlist:", error.code, error.message);
+            throw error;
+        }
+    }, [user]);
+
+    const addSongToPlaylist = useCallback(async (playlist_id, video_id) => {
+        try {
+            const docRef = doc(db, "playlists", playlist_id);
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                await updateDoc(docRef, {
+                    video_ids: arrayUnion(video_id)
+                });
+            } else {
+                console.log("No se encontró la playlist con ese ID");
+            }
+        } catch (error) {
+            console.error("Error al agregar canción a playlists:", error);
+            throw error;
+        }
+    }, []);
+
+    const deletePlaylistDB = useCallback(async (playlist_id) => {
+        try {
+            const docRef = doc(db, "playlists", playlist_id);
+            await deleteDoc(docRef);
+        } catch (error) {
+            console.error("Error al eliminar la playlist:", error);
+            throw error;
+        }
+    }, []);
+
+    const getVideoDB = useCallback(async (video_id) => {
+        try {
+            const docRef = doc(db, "videos", video_id);
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                return {
+                    video_id: docSnap.id,
+                    ...docSnap.data()
+                }
+            } else {
+                console.log("No se encontró el vídeo con ese ID");
+            }
+        } catch (error) {
+            console.error("Error al obtener el vídeo:", error);
+            throw error;
+        }
+    }, []);
+
+    const updateVideoDB = useCallback(async (video_id, newData) => {
+        if (!user) throw new Error("Usuario no autenticado");
+
+        try {
+            const docRef = doc(db, "videos", video_id);
+
+            await updateDoc(docRef, {
+                ...newData
+            });
+
+            return { success: true };
+        } catch (error) {
+            console.error("Error al actualizar el vídeo:", error.code, error.message);
+            throw error;
+        }
+    }, [user]);
 
     // --------------------------------------
 
@@ -98,14 +208,26 @@ export function AuthProvider({ children }) {
         registerDB,
         logout,
         addVideoDB,
-        addPlaylistDB
+        addPlaylistDB,
+        getLatestVideos,
+        getPlaylistDB,
+        addSongToPlaylist,
+        deletePlaylistDB,
+        getVideoDB,
+        updateVideoDB
     }), [user,
         setUser,
         loginDB,
         registerDB,
         logout,
         addVideoDB,
-        addPlaylistDB
+        addPlaylistDB,
+        getLatestVideos,
+        getPlaylistDB,
+        addSongToPlaylist,
+        deletePlaylistDB,
+        getVideoDB,
+        updateVideoDB
     ]);
 
     return (

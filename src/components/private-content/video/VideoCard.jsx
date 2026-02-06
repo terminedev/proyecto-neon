@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
+import ToAddToPlaylist from "components/private-content/playlist/ToAddToPlaylist";
+import DeleteVideo from "components/private-content/video/DeleteVideo";
 
 export default function VideoCard({ videoData }) {
 
@@ -10,23 +13,36 @@ export default function VideoCard({ videoData }) {
         thumbnail_url,
     } = videoData;
 
-    const handlePlay = () => { console.log("Reproducir video interno"); };
+
+    // const { addToFavoritesDB } = useAuth();
+
+    // const [asynObjectAddToFav, setAsynObjectAddToFav] = useState({
+    //     isLoading: false,
+    //     error: null,
+    //     success: false
+    // });
+
+    // const handleAddToFavorites = async (id) => {
+    //     try {
+    //         setAsynObjectAddToFav({ isLoading: true, error: null, success: false });
+
+    //         await addToFavoritesDB(id);
+
+    //         setAsynObjectAddToFav({ isLoading: false, error: null, success: true });
+
+    //     } catch (error) {
+    //         setAsynObjectAddToFav({ isLoading: false, error: error, success: false });
+    //     }
+    // };
 
     const [handleAddToPlaylist, setHandleAddToPlaylist] = useState({
         isOpen: false,
         video_id: null,
     });
 
-    const handleAddToFavorites = async (id) => {
-        try {
-            addToFavoritesDB(id);
-        } catch (error) {
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-        }
-    };
-
-    const handleEdit = () => { console.log("Modificar datos (título/portada)"); };
-    const handleDelete = () => { console.log("Eliminar tarjeta"); };
+    // const handlePlay = () => { console.log("Reproducir video interno"); };
 
     return (
         <>
@@ -42,27 +58,49 @@ export default function VideoCard({ videoData }) {
                     />
                 </main>
                 <footer>
-                    <button onClick={handlePlay}>Play</button>
+                    {/* <button onClick={handlePlay}>Play</button> */}
+
                     <button onClick={() => {
                         setHandleAddToPlaylist({
                             isOpen: true,
                             video_id: video_id
                         })
                     }}>+</button>
-                    <button onClick={() => handleAddToFavorites(video_id)}>Fav</button>
-                    <button onClick={handleEdit}>Edit</button>
-                    <button onClick={handleDelete}>Borrar</button>
-                    <a href={original_url} target='_blank' rel="noreferrer">YT</a>
+
+                    {/* <button
+                        onClick={() => handleAddToFavorites(video_id)}
+                    >
+                        {asynObjectAddToFav.isLoading ? '...' : 'Fav'}
+                    </button> */}
+
+                    <Link to={`/editar-video/${video_id}`}>
+                        Editar
+                    </Link>
+
+                    <button onClick={() => setShowDeleteModal(true)}>Borrar</button>
+
+                    <a href={original_url} target='_blank' rel="noreferrer">Ir a Vídeo YT</a>
                 </footer>
             </article>
 
-            {handleAddToPlaylist.isOpen && <ToAddToPlaylist video_id={video_id} onClose={() => {
-                setHandleAddToPlaylist({
-                    isOpen: false,
-                    video_id: null
-                })
-            }} />}
+            {handleAddToPlaylist.isOpen && (
+                <ToAddToPlaylist
+                    video_id={handleAddToPlaylist.video_id}
+                    onClose={() => {
+                        setHandleAddToPlaylist({
+                            isOpen: false,
+                            video_id: null
+                        })
+                    }}
+                />
+            )}
+
+            {showDeleteModal && (
+                <DeleteVideo
+                    video_id={video_id}
+                    onClose={() => setShowDeleteModal(false)}
+                />
+            )}
         </>
     );
 };
-
