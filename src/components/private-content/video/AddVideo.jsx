@@ -5,7 +5,7 @@ import { getOEmbedDataYT, extractVideoID } from 'services/YTOEmbed';
 import { useAuth } from 'contexts/AuthProvider';
 import { getFirebaseErrorMessage } from 'utils/helpers/getFirebaseErrorMessage';
 
-import styles from './Form.module.css';
+import styles from 'styles/Form.module.css';
 
 export default function AddVideo() {
 

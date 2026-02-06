@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import DeletePlaylist from "components/private-content/playlist/DeletePlaylist";
 
-import styles from 'styles/Card';
+import styles from 'styles/Card.module.css';
 
 export default function PlaylistCard({ playlistData }) {
 

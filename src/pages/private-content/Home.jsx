@@ -5,7 +5,7 @@ import { useAuth } from 'contexts/AuthProvider';
 import VideoCard from "components/private-content/video/VideoCard";
 import PlaylistCard from "components/private-content/playlist/PlaylistCard";
 
-import styles from 'styles/Grid';
+import styles from 'styles/Grid.module.css';
 
 export default function Home() {
 

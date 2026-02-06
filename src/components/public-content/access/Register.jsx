@@ -3,7 +3,7 @@ import { useAuth } from 'contexts/AuthProvider';
 import { useNavigate } from "react-router-dom";
 import { getFirebaseErrorMessage } from 'utils/helpers/getFirebaseErrorMessage';
 
-import styles from './Form.module.css';
+import styles from 'styles/Form.module.css';
 
 export default function Register() {
     const [email, setEmail] = useState("");

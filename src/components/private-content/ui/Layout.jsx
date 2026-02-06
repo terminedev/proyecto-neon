@@ -1,6 +1,6 @@
 import { Link, Outlet } from "react-router-dom";
-import { Logout } from 'components/public-content/access/Logout';
-import styles from 'styles/Layout';
+import Logout from 'components/public-content/access/Logout';
+import styles from 'styles/Layout.module.css';
 
 export default function Layout() {
     return (
