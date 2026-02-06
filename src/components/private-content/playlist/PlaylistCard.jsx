@@ -25,11 +25,11 @@ export default function PlaylistCard({ playlistData }) {
                     />
                 </main>
                 <footer>
-                    <Link to={`/playlist/${id}`}>
+                    <Link to={`/playlist/${playlist_id}`}>
                         Play
                     </Link>
 
-                    <Link to={`/editar-playlist/${id}`}>
+                    <Link to={`/editar-playlist/${playlist_id}`}>
                         Editar
                     </Link>
 

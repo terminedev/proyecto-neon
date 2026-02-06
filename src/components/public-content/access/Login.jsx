@@ -23,7 +23,7 @@ export default function Login() {
             setAsynObject({ data: null, isLoading: true, error: null });
 
             const data = await loginDB(email, password);
-            if (data.success) navigate('/');
+            if (data.success) navigate('/', { replace: true });
 
         } catch (error) {
             setAsynObject({

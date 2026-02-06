@@ -8,10 +8,11 @@ import { getFirebaseErrorMessage } from 'utils/helpers/getFirebaseErrorMessage';
 export default function AddVideo() {
 
     const [showForm, setShowForm] = useState(false);
-    const { navigate } = useNavigate();
+    const navigate = useNavigate();
     const { addVideoDB } = useAuth();
 
     const [asynObjectFetchVideoData, setAsynObjectFetchVideoData] = useState({
+        data: null,
         isLoading: false,
         error: null
     });
@@ -56,7 +57,7 @@ export default function AddVideo() {
         if (!videoId) return console.warn('URL de YouTube no válida')
 
         try {
-            setAsynObjectFetchVideoData({ isLoading: true, error: null });
+            setAsynObjectFetchVideoData({ data: null, isLoading: true, error: null });
 
             const data = await getOEmbedDataYT(url);
 
@@ -71,7 +72,7 @@ export default function AddVideo() {
 
             setShowForm(true);
 
-            setAsynObjectFetchVideoData({ isLoading: false, error: null });
+            setAsynObjectFetchVideoData({ data: data, isLoading: false, error: null });
 
         } catch (error) {
             setAsynObjectFetchVideoData({ isLoading: false, error: error });
@@ -83,7 +84,7 @@ export default function AddVideo() {
             setAsynObjectAddVideo({ data: null, isLoading: true, error: null });
 
             const data = await addVideoDB(dataToAdd); // <-- Función Firebase
-            if (data.success) navigate('/');
+            if (data.success) navigate('/', { replace: true });
 
         } catch (error) {
             setAsynObjectAddVideo({
@@ -171,11 +172,11 @@ export default function AddVideo() {
                                 :
                                 <>
                                     <button type="button" onClick={() => reset({
-                                        original_url: url,
-                                        original_video_id_url: videoId,
-                                        author_name: data.author_name,
-                                        title: data.title,
-                                        thumbnail_url: data.thumbnail_url,
+                                        original_url: asynObjectFetchVideoData.data.url,
+                                        original_video_id_url: asynObjectFetchVideoData.videoId,
+                                        author_name: asynObjectFetchVideoData.data.author_name,
+                                        title: asynObjectFetchVideoData.data.title,
+                                        thumbnail_url: asynObjectFetchVideoData.data.thumbnail_url,
                                         description: '',
                                     })}>
                                         Restaurar Datos

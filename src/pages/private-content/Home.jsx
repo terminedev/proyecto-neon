@@ -82,17 +82,21 @@ export default function Home() {
                 {isLoading ? (
                     <p>Cargando vídeos...</p>
                 ) : (
-                    data.videos.length > 0 ? (
-                        data.videos.map(video => (
-                            <ul key={video.video_id}>
-                                <li>
-                                    <VideoCard videoData={video} />
-                                </li>
-                            </ul>
-                        ))
-                    ) : (
-                        !error && <p>No hay vídeos recientes.</p>
-                    )
+                    <ul>
+                        {
+                            data.videos.length > 0 ? (
+                                data.videos.map(video => (
+                                    <li>
+
+                                        <VideoCard videoData={video} />
+
+                                    </li>
+                                ))
+                            ) : (
+                                !error && <p>No hay vídeos recientes.</p>
+                            )
+                        }
+                    </ul>
                 )}
             </section>
 
@@ -108,15 +112,19 @@ export default function Home() {
                 {isLoading ? (
                     <p>Cargando playlists...</p>
                 ) : (
-                    data.playlists.length > 0 ? (
-                        data.playlists.map(playlist => (
-                            <ul key={playlist.playlist_id}>
-                                <PlaylistCard playlistData={playlist} />
-                            </ul>
-                        ))
-                    ) : (
-                        !error && <p>No hay playlists recientes.</p>
-                    )
+                    <ul>
+                        {
+                            data.playlists.length > 0 ? (
+                                data.playlists.map(playlist => (
+                                    <li key={playlist.playlist_id}>
+                                        <PlaylistCard playlistData={playlist} />
+                                    </li>
+                                ))
+                            ) : (
+                                !error && <p>No hay playlists recientes.</p>
+                            )
+                        }
+                    </ul>
                 )}
             </section>
         </>

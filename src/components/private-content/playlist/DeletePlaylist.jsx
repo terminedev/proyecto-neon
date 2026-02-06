@@ -34,28 +34,26 @@ export default function DeletePlaylist({ playlist_id, onClose }) {
             <p>Esta acción no se puede deshacer.</p>
 
             {asyncDeleteState.error &&
-                <>
-                    <p>
-                        *{getFirebaseErrorMessage(asyncDeleteState.error.code)}
-                    </p>
+                <p>
+                    *{getFirebaseErrorMessage(asyncDeleteState.error.code)}
+                </p>
+            }
 
-                    {
-                        asyncDeleteState.isLoading
-                            ? <p>Borrando...</p>
-                            : <>
-                                <button
-                                    onClick={onClose}
-                                >
-                                    Cancelar
-                                </button>
-                                <button
-                                    onClick={handleDelete}
-                                >
-                                    Borrar
-                                </button>
-                            </>
-                    }
-                </>
+            {
+                asyncDeleteState.isLoading
+                    ? <p>Borrando...</p>
+                    : <>
+                        <button
+                            onClick={onClose}
+                        >
+                            Cancelar
+                        </button>
+                        <button
+                            onClick={handleDelete}
+                        >
+                            Borrar
+                        </button>
+                    </>
             }
         </dialog>
     );

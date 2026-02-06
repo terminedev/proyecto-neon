@@ -23,7 +23,7 @@ export default function Register() {
             setAsynObject({ data: null, isLoading: true, error: null });
 
             const data = await registerDB(email, password);
-            if (data.success) navigate('/');
+            if (data.success) navigate('/', { replace: true });
 
         } catch (error) {
             setAsynObject({

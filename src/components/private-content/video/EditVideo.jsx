@@ -80,7 +80,7 @@ export default function EditVideo() {
 
             setAsynObjectUpdate({ isLoading: false, error: null, success: true });
 
-            navigate(-1);
+            navigate(-1, { replace: true });
 
         } catch (error) {
             console.error(error);

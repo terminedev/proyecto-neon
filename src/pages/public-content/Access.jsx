@@ -15,7 +15,7 @@ export default function Access() {
             {isLogin ? <Login /> : <Register />}
 
             <button onClick={() => setIsLogin(prevState => !prevState)}>
-                {isLogin ? 'Iniciar Sesión' : 'Registrarse'}
+                {isLogin ? '¿No tienes cuenta? Regístrate' : '¿Ya tienes cuenta? Inicia Sesión'}
             </button>
             <Link to="/acerca-de">Saber más acerca del proyecto Neón</Link>
         </section>

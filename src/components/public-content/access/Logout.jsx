@@ -21,7 +21,7 @@ export default function Logout() {
             setAsynObject({ isLoading: true, error: null });
 
             const data = await logout();
-            if (data.success) navigate('/acceder');
+            if (data.success) navigate('/acceder', { replace: true });
 
         } catch (error) {
             setAsynObject({

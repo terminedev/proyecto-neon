@@ -6,7 +6,7 @@ import { getFirebaseErrorMessage } from 'utils/helpers/getFirebaseErrorMessage';
 
 export default function AddPlaylist() {
 
-    const { navigate } = useNavigate();
+    const navigate = useNavigate();
     const { addPlaylistDB } = useAuth();
 
     const [asynObjectAddPlaylist, setAsynObjectAddPlaylist] = useState({
@@ -41,7 +41,7 @@ export default function AddPlaylist() {
                 ...data
             });
 
-            if (response.success) navigate('/');
+            if (response.success) navigate('/', { replace: true });
         } catch (error) {
             setAsynObjectAddPlaylist({
                 isLoading: false,

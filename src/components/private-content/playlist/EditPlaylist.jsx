@@ -76,6 +76,7 @@ export default function EditPlaylist() {
 
             setAsynObjectUpdatePlaylist({ isLoading: false, error: null });
 
+            navigate(-1, { replace: true });
         } catch (error) {
             setAsynObjectUpdatePlaylist({ isLoading: false, error: error });
         }

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getFirebaseErrorMessage } from 'utils/helpers/getFirebaseErrorMessage';
 import { useAuth } from 'contexts/AuthProvider';
-import VideoCard from "components/shared/VideoCard";
+import VideoCard from "components/private-content/video/VideoCard";
 
 
 export default function PlaylistDetail() {
@@ -139,13 +139,12 @@ export default function PlaylistDetail() {
                     videos.length > 0 ? (
                         <ul>
                             {videos.map(video => (
-                                <li key={video.id}>
+                                <li key={video.video_id}>
 
-                                    <VideoCard video={video} />
-
+                                    <VideoCard videoData={video} />
 
                                     < button
-                                        onClick={() => handleRemoveVideo(video.id)}>
+                                        onClick={() => handleRemoveVideo(video.video_id)}>
                                         Eliminar
                                     </button>
                                 </li>
