@@ -117,7 +117,10 @@ export function AuthProvider({ children }) {
 
     const getPlaylistDB = useCallback(async () => {
         try {
-            const q = query(collection(db, "playlists"), where("user_id", "==", user.uid));
+            const q = query(
+                collection(db, "playlists"),
+                where("user_id", "==", user.uid),
+                orderBy('created_at', 'desc'));
 
             const querySnapshot = await getDocs(q);
 
@@ -276,6 +279,32 @@ export function AuthProvider({ children }) {
         }
     }, []);
 
+    const getAllVideos = useCallback(async () => {
+        if (!user) throw new Error("Usuario no autenticado");
+
+        try {
+            const q = query(
+                collection(db, "videos"),
+                where("user_id", "==", user.uid),
+                orderBy('created_at', 'desc')
+            );
+
+            const querySnapshot = await getDocs(q);
+
+            const list = [];
+
+            querySnapshot.forEach((doc) => list.push({
+                video_id: doc.id,
+                ...doc.data()
+            }));
+
+            return list;
+        } catch (error) {
+            console.error("Error al obtener todos los vídeos:", error.code, error.message);
+            throw error;
+        }
+    }, [user]);
+
 
     // --------------------------------------
 
@@ -296,7 +325,8 @@ export function AuthProvider({ children }) {
         updatePlaylistDB,
         deletePlaylistDB,
         addSongToPlaylist,
-        removeSongFromPlaylist
+        removeSongFromPlaylist,
+        getAllVideos
     }), [
         user,
         setUser,
@@ -314,7 +344,8 @@ export function AuthProvider({ children }) {
         getLatestPlaylist,
         getPlaylistByIdDB,
         updatePlaylistDB,
-        removeSongFromPlaylist
+        removeSongFromPlaylist,
+        getAllVideos
     ]);
     return (
         <AuthContext.Provider value={contextValue}>

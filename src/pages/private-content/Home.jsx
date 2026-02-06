@@ -68,12 +68,7 @@ export default function Home() {
             </section>
 
             {/* Manejo de Error Global para la carga inicial */}
-            {error && (
-                <div>
-                    <p>Ocurrió un error al cargar el inicio:</p>
-                    <p>*{getFirebaseErrorMessage(error.code)}</p>
-                </div>
-            )}
+            {error && <p>*{getFirebaseErrorMessage(error.code)}</p>}
 
             {/* Sección Vídeos */}
             <section>
