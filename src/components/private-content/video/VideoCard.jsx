@@ -13,6 +13,7 @@ export default function VideoCard({ videoData }) {
         author_name,
         title,
         thumbnail_url,
+        description,
     } = videoData;
 
 
@@ -50,6 +51,7 @@ export default function VideoCard({ videoData }) {
                 <header className={styles.content}>
                     <h3>{title}</h3>
                     <p>Canal: {author_name}</p>
+                    <p>{description}</p>
                 </header>
                 <main>
                     <img
