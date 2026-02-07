@@ -13,14 +13,11 @@ import {
     addDoc,
     serverTimestamp,
     orderBy,
-    limit,
     getDocs,
     doc,
     getDoc,
     updateDoc,
-    arrayUnion,
-    deleteDoc,
-    arrayRemove
+    deleteDoc
 } from 'firebase/firestore';
 
 
@@ -30,7 +27,7 @@ import {
     useContext,
     useState,
     useMemo,
-    useEffect // Te sugiero agregar este para el observador de sesión
+    useEffect
 } from 'react';
 
 const AuthContext = createContext();
@@ -116,120 +113,120 @@ export function AuthProvider({ children }) {
         }
     }, [user]);
 
-    const addPlaylistDB = useCallback(async (dataToAdd) => {
-        if (!user) throw new Error("Usuario no autenticado");
+    // const addPlaylistDB = useCallback(async (dataToAdd) => {
+    //     if (!user) throw new Error("Usuario no autenticado");
 
-        try {
-            const q = query(collection(db, 'playlists'), where("user_id", "==", user.uid));
-            const snapshot = await getCountFromServer(q);
+    //     try {
+    //         const q = query(collection(db, 'playlists'), where("user_id", "==", user.uid));
+    //         const snapshot = await getCountFromServer(q);
 
-            if (snapshot.data().count >= MAX_LIMIT) {
-                throw new Error(`Límite alcanzado: No puedes tener más de ${MAX_LIMIT} playlists.`);
-            }
+    //         if (snapshot.data().count >= MAX_LIMIT) {
+    //             throw new Error(`Límite alcanzado: No puedes tener más de ${MAX_LIMIT} playlists.`);
+    //         }
 
-            await addDoc(collection(db, 'playlists'), {
-                user_id: user.uid,
-                created_at: serverTimestamp(),
-                video_ids: [],
-                ...dataToAdd
-            });
+    //         await addDoc(collection(db, 'playlists'), {
+    //             user_id: user.uid,
+    //             created_at: serverTimestamp(),
+    //             video_ids: [],
+    //             ...dataToAdd
+    //         });
 
-            return { success: true };
-        } catch (error) {
-            console.error("Error al agregar playlist:", error.code, error.message);
-            throw error;
-        }
-    }, [user]);
+    //         return { success: true };
+    //     } catch (error) {
+    //         console.error("Error al agregar playlist:", error.code, error.message);
+    //         throw error;
+    //     }
+    // }, [user]);
 
-    const getLatestVideos = useCallback(async () => {
-        if (!user) throw new Error("Usuario no autenticado");
+    // const getLatestVideos = useCallback(async () => {
+    //     if (!user) throw new Error("Usuario no autenticado");
 
-        try {
-            const q = query(
-                collection(db, "videos"),
-                where("user_id", "==", user.uid),
-                orderBy('created_at', 'desc'),
-                limit(7)
-            )
+    //     try {
+    //         const q = query(
+    //             collection(db, "videos"),
+    //             where("user_id", "==", user.uid),
+    //             orderBy('created_at', 'desc'),
+    //             limit(7)
+    //         )
 
-            const querySnapshot = await getDocs(q);
+    //         const querySnapshot = await getDocs(q);
 
-            const list = [];
+    //         const list = [];
 
-            querySnapshot.forEach((doc) => list.push({
-                video_id: doc.id,
-                ...doc.data()
-            }));
+    //         querySnapshot.forEach((doc) => list.push({
+    //             video_id: doc.id,
+    //             ...doc.data()
+    //         }));
 
-            return list;
-        } catch (error) {
-            console.error("Error al obtener los últimos 7 vídeos:", error.code, error.message);
-            throw error;
-        }
-    }, [user]);
+    //         return list;
+    //     } catch (error) {
+    //         console.error("Error al obtener los últimos 7 vídeos:", error.code, error.message);
+    //         throw error;
+    //     }
+    // }, [user]);
 
-    const getPlaylistDB = useCallback(async () => {
-        try {
-            const q = query(
-                collection(db, "playlists"),
-                where("user_id", "==", user.uid),
-                orderBy('created_at', 'desc'));
+    // const getPlaylistDB = useCallback(async () => {
+    //     try {
+    //         const q = query(
+    //             collection(db, "playlists"),
+    //             where("user_id", "==", user.uid),
+    //             orderBy('created_at', 'desc'));
 
-            const querySnapshot = await getDocs(q);
+    //         const querySnapshot = await getDocs(q);
 
-            const list = [];
+    //         const list = [];
 
-            querySnapshot.forEach((doc) => list.push({
-                playlist_id: doc.id,
-                ...doc.data()
-            }));
+    //         querySnapshot.forEach((doc) => list.push({
+    //             playlist_id: doc.id,
+    //             ...doc.data()
+    //         }));
 
-            return list;
-        } catch (error) {
-            console.error("Error al obtener la playlist:", error.code, error.message);
-            throw error;
-        }
-    }, [user]);
+    //         return list;
+    //     } catch (error) {
+    //         console.error("Error al obtener la playlist:", error.code, error.message);
+    //         throw error;
+    //     }
+    // }, [user]);
 
-    const addSongToPlaylist = useCallback(async (playlist_id, video_id) => {
-        try {
-            const docRef = doc(db, "playlists", playlist_id);
-            const docSnap = await getDoc(docRef);
+    // const addSongToPlaylist = useCallback(async (playlist_id, video_id) => {
+    //     try {
+    //         const docRef = doc(db, "playlists", playlist_id);
+    //         const docSnap = await getDoc(docRef);
 
-            if (docSnap.exists()) {
-                const playlistData = docSnap.data();
-                const currentVideos = playlistData.video_ids || [];
+    //         if (docSnap.exists()) {
+    //             const playlistData = docSnap.data();
+    //             const currentVideos = playlistData.video_ids || [];
 
-                if (currentVideos.length >= MAX_LIMIT) {
-                    throw new Error(`Esta playlist ya tiene el máximo de ${MAX_LIMIT} canciones.`);
-                }
+    //             if (currentVideos.length >= MAX_LIMIT) {
+    //                 throw new Error(`Esta playlist ya tiene el máximo de ${MAX_LIMIT} canciones.`);
+    //             }
 
-                if (currentVideos.includes(video_id)) {
-                    throw new Error("El video ya está en esta playlist.");
-                }
+    //             if (currentVideos.includes(video_id)) {
+    //                 throw new Error("El video ya está en esta playlist.");
+    //             }
 
-                await updateDoc(docRef, {
-                    video_ids: arrayUnion(video_id)
-                });
-                return { success: true };
-            } else {
-                console.log("No se encontró la playlist con ese ID");
-            }
-        } catch (error) {
-            console.error("Error al agregar canción a playlists:", error);
-            throw error;
-        }
-    }, []);
+    //             await updateDoc(docRef, {
+    //                 video_ids: arrayUnion(video_id)
+    //             });
+    //             return { success: true };
+    //         } else {
+    //             console.log("No se encontró la playlist con ese ID");
+    //         }
+    //     } catch (error) {
+    //         console.error("Error al agregar canción a playlists:", error);
+    //         throw error;
+    //     }
+    // }, []);
 
-    const deletePlaylistDB = useCallback(async (playlist_id) => {
-        try {
-            const docRef = doc(db, "playlists", playlist_id);
-            await deleteDoc(docRef);
-        } catch (error) {
-            console.error("Error al eliminar la playlist:", error);
-            throw error;
-        }
-    }, []);
+    // const deletePlaylistDB = useCallback(async (playlist_id) => {
+    //     try {
+    //         const docRef = doc(db, "playlists", playlist_id);
+    //         await deleteDoc(docRef);
+    //     } catch (error) {
+    //         console.error("Error al eliminar la playlist:", error);
+    //         throw error;
+    //     }
+    // }, []);
 
     const getVideoDB = useCallback(async (video_id) => {
         try {
@@ -267,82 +264,82 @@ export function AuthProvider({ children }) {
         }
     }, [user]);
 
-    const getLatestPlaylist = useCallback(async () => {
-        if (!user) throw new Error("Usuario no autenticado");
+    // const getLatestPlaylist = useCallback(async () => {
+    //     if (!user) throw new Error("Usuario no autenticado");
 
-        try {
-            const q = query(
-                collection(db, "playlists"),
-                where("user_id", "==", user.uid),
-                orderBy('created_at', 'desc'),
-                limit(7)
-            )
+    //     try {
+    //         const q = query(
+    //             collection(db, "playlists"),
+    //             where("user_id", "==", user.uid),
+    //             orderBy('created_at', 'desc'),
+    //             limit(7)
+    //         )
 
-            const querySnapshot = await getDocs(q);
+    //         const querySnapshot = await getDocs(q);
 
-            const list = [];
+    //         const list = [];
 
-            querySnapshot.forEach((doc) => list.push({
-                playlist_id: doc.id, // <--- Aquí estaba el error, decía video_id
-                ...doc.data()
-            }));
+    //         querySnapshot.forEach((doc) => list.push({
+    //             playlist_id: doc.id, // <--- Aquí estaba el error, decía video_id
+    //             ...doc.data()
+    //         }));
 
-            return list;
-        } catch (error) {
-            console.error("Error al obtener las últimas 7 playlist:", error.code, error.message);
-            throw error;
-        }
-    }, [user]);
+    //         return list;
+    //     } catch (error) {
+    //         console.error("Error al obtener las últimas 7 playlist:", error.code, error.message);
+    //         throw error;
+    //     }
+    // }, [user]);
 
-    const getPlaylistByIdDB = useCallback(async (playlist_id) => {
-        try {
-            const docRef = doc(db, "playlists", playlist_id);
-            const docSnap = await getDoc(docRef);
+    // const getPlaylistByIdDB = useCallback(async (playlist_id) => {
+    //     try {
+    //         const docRef = doc(db, "playlists", playlist_id);
+    //         const docSnap = await getDoc(docRef);
 
-            if (docSnap.exists()) {
-                return {
-                    playlist_id: docSnap.id,
-                    ...docSnap.data()
-                }
-            } else {
-                console.log("No se encontró la playlist con ese ID");
-                return null;
-            }
-        } catch (error) {
-            console.error("Error al obtener la playlist:", error);
-            throw error;
-        }
-    }, []);
+    //         if (docSnap.exists()) {
+    //             return {
+    //                 playlist_id: docSnap.id,
+    //                 ...docSnap.data()
+    //             }
+    //         } else {
+    //             console.log("No se encontró la playlist con ese ID");
+    //             return null;
+    //         }
+    //     } catch (error) {
+    //         console.error("Error al obtener la playlist:", error);
+    //         throw error;
+    //     }
+    // }, []);
 
-    const updatePlaylistDB = useCallback(async (playlist_id, newData) => {
-        if (!user) throw new Error("Usuario no autenticado");
+    // const updatePlaylistDB = useCallback(async (playlist_id, newData) => {
+    //     if (!user) throw new Error("Usuario no autenticado");
 
-        try {
-            const docRef = doc(db, "playlists", playlist_id);
+    //     try {
+    //         const docRef = doc(db, "playlists", playlist_id);
 
-            await updateDoc(docRef, {
-                ...newData
-            });
+    //         await updateDoc(docRef, {
+    //             ...newData
+    //         });
 
-            return { success: true };
-        } catch (error) {
-            console.error("Error al actualizar la playlist:", error.code, error.message);
-            throw error;
-        }
-    }, [user]);
+    //         return { success: true };
+    //     } catch (error) {
+    //         console.error("Error al actualizar la playlist:", error.code, error.message);
+    //         throw error;
+    //     }
+    // }, [user]);
 
-    const removeSongFromPlaylist = useCallback(async (playlist_id, video_id) => {
-        try {
-            const docRef = doc(db, "playlists", playlist_id);
-            await updateDoc(docRef, {
-                video_ids: arrayRemove(video_id)
-            });
-            return { success: true };
-        } catch (error) {
-            console.error("Error al eliminar canción de playlist:", error);
-            throw error;
-        }
-    }, []);
+    // const removeSongFromPlaylist = useCallback(async (playlist_id, video_id) => {
+    //     try {
+    //         const docRef = doc(db, "playlists", playlist_id);
+    //         await updateDoc(docRef, {
+    //             video_ids: arrayRemove(video_id)
+    //         });
+    //         return { success: true };
+    //     } catch (error) {
+    //         console.error("Error al eliminar canción de playlist:", error);
+    //         throw error;
+    //     }
+    // }, []);
 
     const getAllVideos = useCallback(async () => {
         if (!user) throw new Error("Usuario no autenticado");
@@ -370,43 +367,43 @@ export function AuthProvider({ children }) {
         }
     }, [user]);
 
-    const getVideosAccordingToPlaylist = useCallback(async (playlist_id) => {
-        try {
-            const playlistRef = doc(db, "playlists", playlist_id);
-            const playlistSnap = await getDoc(playlistRef);
+    // const getVideosAccordingToPlaylist = useCallback(async (playlist_id) => {
+    //     try {
+    //         const playlistRef = doc(db, "playlists", playlist_id);
+    //         const playlistSnap = await getDoc(playlistRef);
 
-            if (!playlistSnap.exists()) {
-                console.warn("No se encontró la playlist con ese ID");
-                return [];
-            }
+    //         if (!playlistSnap.exists()) {
+    //             console.warn("No se encontró la playlist con ese ID");
+    //             return [];
+    //         }
 
-            const playlistData = playlistSnap.data();
-            const videoIds = playlistData.video_ids || [];
+    //         const playlistData = playlistSnap.data();
+    //         const videoIds = playlistData.video_ids || [];
 
-            if (videoIds.length === 0) return [];
+    //         if (videoIds.length === 0) return [];
 
-            const videoPromises = videoIds.map(async (videoId) => {
-                const videoRef = doc(db, "videos", videoId);
-                const videoSnap = await getDoc(videoRef);
+    //         const videoPromises = videoIds.map(async (videoId) => {
+    //             const videoRef = doc(db, "videos", videoId);
+    //             const videoSnap = await getDoc(videoRef);
 
-                if (videoSnap.exists()) {
-                    return {
-                        video_id: videoSnap.id,
-                        ...videoSnap.data()
-                    };
-                }
-                return null;
-            });
+    //             if (videoSnap.exists()) {
+    //                 return {
+    //                     video_id: videoSnap.id,
+    //                     ...videoSnap.data()
+    //                 };
+    //             }
+    //             return null;
+    //         });
 
-            const videosRaw = await Promise.all(videoPromises);
+    //         const videosRaw = await Promise.all(videoPromises);
 
-            return videosRaw.filter(video => video !== null);
+    //         return videosRaw.filter(video => video !== null);
 
-        } catch (error) {
-            console.error("Error al obtener videos de la playlist:", error);
-            throw error;
-        }
-    }, []);
+    //     } catch (error) {
+    //         console.error("Error al obtener videos de la playlist:", error);
+    //         throw error;
+    //     }
+    // }, []);
 
     const deleteVideoDB = useCallback(async (video_id) => {
         if (!user) throw new Error("Usuario no autenticado");
@@ -451,19 +448,19 @@ export function AuthProvider({ children }) {
         registerDB,
         logout,
         addVideoDB,
-        getLatestVideos,
+        // getLatestVideos,
         getVideoDB,
         updateVideoDB,
-        addPlaylistDB,
-        getPlaylistDB,
-        getLatestPlaylist,
-        getPlaylistByIdDB,
-        updatePlaylistDB,
-        deletePlaylistDB,
-        addSongToPlaylist,
-        removeSongFromPlaylist,
+        // addPlaylistDB,
+        // getPlaylistDB,
+        // getLatestPlaylist,
+        // getPlaylistByIdDB,
+        // updatePlaylistDB,
+        // deletePlaylistDB,
+        // addSongToPlaylist,
+        // removeSongFromPlaylist,
         getAllVideos,
-        getVideosAccordingToPlaylist,
+        // getVideosAccordingToPlaylist,
         deleteVideoDB,
         getVideoCountDB,
         authLoading
@@ -474,20 +471,20 @@ export function AuthProvider({ children }) {
         registerDB,
         logout,
         addVideoDB,
-        addPlaylistDB,
-        getLatestVideos,
-        getPlaylistDB,
-        addSongToPlaylist,
-        deletePlaylistDB,
+        // addPlaylistDB,
+        // getLatestVideos,
+        // getPlaylistDB,
+        // addSongToPlaylist,
+        // deletePlaylistDB,
         getVideoDB,
         updateVideoDB,
-        getLatestPlaylist,
-        getPlaylistByIdDB,
-        updatePlaylistDB,
-        removeSongFromPlaylist,
+        // getLatestPlaylist,
+        // getPlaylistByIdDB,
+        // updatePlaylistDB,
+        // removeSongFromPlaylist,
         getAllVideos,
         deleteVideoDB,
-        getVideosAccordingToPlaylist,
+        // getVideosAccordingToPlaylist,
         getVideoCountDB,
         authLoading
     ]);
