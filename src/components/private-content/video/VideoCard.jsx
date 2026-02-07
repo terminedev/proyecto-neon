@@ -42,8 +42,6 @@ export default function VideoCard({ videoData }) {
         video_id: null,
     });
 
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
-
     // const handlePlay = () => { console.log("Reproducir video interno"); };
 
     return (
@@ -63,12 +61,12 @@ export default function VideoCard({ videoData }) {
                 <footer className={styles.footer}>
                     {/* <button onClick={handlePlay}>Play</button> */}
 
-                    <button onClick={() => {
+                    {/* <button onClick={() => {
                         setHandleAddToPlaylist({
                             isOpen: true,
                             video_id: video_id
                         })
-                    }}>+</button>
+                    }}>+</button> */}
 
                     {/* <button
                         onClick={() => handleAddToFavorites(video_id)}
@@ -80,7 +78,9 @@ export default function VideoCard({ videoData }) {
                         Editar
                     </Link>
 
-                    <button onClick={() => setShowDeleteModal(true)} className={styles.button} style={{ background: 'var(--neon-pink)' }}>Borrar</button>
+                    <Link to={`/borrar-video/${video_id}`} className={styles.button}>
+                        Borrar
+                    </Link>
 
                     <a href={original_url} target='_blank' rel="noreferrer">Ir a Vídeo YT</a>
                 </footer>
@@ -95,13 +95,6 @@ export default function VideoCard({ videoData }) {
                             video_id: null
                         })
                     }}
-                />
-            )}
-
-            {showDeleteModal && (
-                <DeleteVideo
-                    video_id={video_id}
-                    onClose={() => setShowDeleteModal(false)}
                 />
             )}
         </>

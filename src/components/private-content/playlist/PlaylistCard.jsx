@@ -12,8 +12,6 @@ export default function PlaylistCard({ playlistData }) {
         cover,
     } = playlistData;
 
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
-
     return (
         <>
             <article className={styles.card}>
@@ -36,18 +34,11 @@ export default function PlaylistCard({ playlistData }) {
                         Editar
                     </Link>
 
-                    <button onClick={() => setShowDeleteModal(true)} className={styles.button} style={{ background: 'var(--neon-pink)' }}>
+                    <Link to={`/borrar-playlist/${playlist_id}`} className={styles.button}>
                         Borrar
-                    </button>
+                    </Link>
                 </footer>
             </article>
-
-            {showDeleteModal && (
-                <DeletePlaylist
-                    playlistData={playlist_id}
-                    onClose={() => setShowDeleteModal(false)}
-                />
-            )}
         </>
     );
 };

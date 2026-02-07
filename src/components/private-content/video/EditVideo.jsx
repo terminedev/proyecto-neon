@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { getFirebaseErrorMessage } from 'utils/helpers/getFirebaseErrorMessage';
 import { useAuth } from 'contexts/AuthProvider';
 
+import styles from 'styles/Form.module.css';
 
 export default function EditVideo() {
 
@@ -94,7 +95,7 @@ export default function EditVideo() {
     };
 
     return (
-        <section>
+        <section className={styles.formWrapper}>
             <h2>Editar Información del Video:</h2>
 
             {asynObjectFetch.isLoading && <p>Cargando información del video...</p>}
@@ -115,32 +116,41 @@ export default function EditVideo() {
                     {/* Formulario Principal */}
                     <form onSubmit={handleSubmit(handleUpdate)}>
 
-                        <label htmlFor='video_title'>Título:</label>
-                        <input
-                            type='text'
-                            id="video_title"
-                            {...register('title', { required: 'El título es obligatorio' })}
-                        />
-                        {errors.title && <p>*{errors.title.message}</p>}
+                        <div className={styles.formGroup}>
+                            <label htmlFor='video_title'>Título:</label>
+                            <input
+                                type='text'
+                                id="video_title"
+                                className={styles.input}
+                                {...register('title', { required: 'El título es obligatorio' })}
+                            />
+                            {errors.title && <p>*{errors.title.message}</p>}
+                        </div>
 
-                        <label htmlFor='thumbnail_url'>URL Portada:</label>
-                        <input
-                            type='text'
-                            id='thumbnail_url'
-                            {...register('thumbnail_url')}
-                        />
+                        <div className={styles.formGroup}>
+                            <label htmlFor='thumbnail_url'>URL Portada:</label>
+                            <input
+                                type='text'
+                                id='thumbnail_url'
+                                className={styles.input}
+                                {...register('thumbnail_url')}
+                            />
 
-                        {/* Previsualización */}
-                        {watchedThumbnail && (
-                            <img src={watchedThumbnail} alt="Thumb" style={{ maxWidth: '200px', display: 'block', margin: '10px 0' }} />
-                        )}
 
-                        <label>Notas Personales (Descripción):</label>
-                        <textarea
-                            {...register('description')}
-                            rows="4"
-                            placeholder="Escribe tus notas aquí..."
-                        />
+                            {/* Previsualización */}
+                            {watchedThumbnail && (
+                                <img src={watchedThumbnail} alt="Thumb" style={{ maxWidth: '200px', display: 'block', margin: '10px 0' }} />
+                            )}
+                        </div>
+
+                        <div className={styles.formGroup}>
+                            <label>Notas Personales (Descripción):</label>
+                            <textarea
+                                {...register('description')}
+                                rows="4"
+                                placeholder="Escribe tus notas aquí..."
+                            />
+                        </div>
 
                         {asynObjectUpdate.error && <p>*{getFirebaseErrorMessage(asynObjectUpdate.error.code)}</p>}
 
@@ -149,11 +159,11 @@ export default function EditVideo() {
                                 ? <p>Guardando cambios...</p>
                                 : (
                                     <>
-                                        <button type="button" onClick={() => reset()} disabled={asynObjectUpdate.success}>
+                                        <button className={styles.button} type="button" onClick={() => reset()}>
                                             Restaurar Datos Originales
                                         </button>
                                         &nbsp;
-                                        <button type="submit">
+                                        <button className={styles.button} type="submit">
                                             Guardar Cambios
                                         </button>
                                     </>

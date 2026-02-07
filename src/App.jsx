@@ -4,15 +4,13 @@ import { AuthProvider } from 'contexts/AuthProvider';
 import Access from 'pages/public-content/Access';
 import About from 'components/public-content/access/About';
 import Home from 'pages/private-content/Home';
-import MyPlaylists from 'pages/private-content/MyPlaylists';
 import MyVideos from 'pages/private-content/MyVideos';
-import PlaylistDetail from 'pages/private-content/PlaylistDetail';
-import AddPlaylist from 'components/private-content/playlist/AddPlaylist';
 import ProtectedRoute from 'routes/ProtectedRoute';
 import Layout from 'components/private-content/ui/Layout';
 import AddVideo from 'components/private-content/video/AddVideo';
-import EditPlaylist from 'components/private-content/playlist/EditPlaylist';
 import EditVideo from 'components/private-content/video/EditVideo';
+import DeleteVideo from 'components/private-content/video/DeleteVideo';
+
 
 import './App.css';
 
@@ -31,15 +29,13 @@ export default function App() {
             <Route element={<Layout />}>
 
               <Route path='/' element={<Home />} />
-              <Route path='/mis-playlists' element={<MyPlaylists />} />
               <Route path='/mis-videos' element={<MyVideos />} />
-              <Route path='/playlist/:playlist_id' element={<PlaylistDetail />} />
 
-              <Route path='/crear-playlist' element={<AddPlaylist />} />
               <Route path='/agregar-video' element={<AddVideo />} />
 
-              <Route path='/editar-playlist/:playlist_id' element={<EditPlaylist />} />
               <Route path='/editar-video/:video_id' element={<EditVideo />} />
+
+              <Route path='/borrar-video/:video_id' element={<DeleteVideo />} />
             </Route>
           </Route>
 

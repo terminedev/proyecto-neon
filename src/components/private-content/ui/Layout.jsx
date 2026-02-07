@@ -6,7 +6,7 @@ export default function Layout() {
     return (
         <div className={styles.container}>
             <header className={styles.header}>
-                <Link to="/">Home</Link>
+                <Link to="/" style={{ textDecoration: 'underline' }}>Home</Link>
                 <h1>Proyecto Neón</h1>
                 <div className={styles.navLinks}>
                     <Logout />

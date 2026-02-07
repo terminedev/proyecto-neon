@@ -15,9 +15,8 @@ export default function EditPlaylist() {
     const navigate = useNavigate();
 
     const [asynObjectFetchPlaylist, setAsynObjectFetchPlaylist] = useState({
-        isLoading: false,
-        error: null,
-        data: null
+        isLoading: true,
+        error: null
     });
 
     const [asynObjectUpdatePlaylist, setAsynObjectUpdatePlaylist] = useState({
@@ -37,7 +36,7 @@ export default function EditPlaylist() {
             cover: '',
             description: '',
             color: '#00ffff',
-        },
+        }
     });
 
     const watchedCover = watch('cover');
@@ -54,17 +53,18 @@ export default function EditPlaylist() {
 
                 if (!data) throw { code: 'custom/not-found', message: 'Playlist no encontrada' };
 
-                setAsynObjectFetchPlaylist({
-                    isLoading: false,
-                    error: null,
-                    data: data
-                });
+                console.log(data)
 
                 reset({
                     name: data.name,
                     cover: data.cover,
                     description: data.description,
                     color: data.color,
+                });
+
+                setAsynObjectFetchPlaylist({
+                    isLoading: false,
+                    error: null
                 });
 
             } catch (error) {
@@ -90,13 +90,6 @@ export default function EditPlaylist() {
         }
     };
 
-    const handleRestore = () => {
-        if (asynObjectFetchPlaylist.data) {
-            reset(asynObjectFetchPlaylist.data);
-        } else {
-            reset();
-        }
-    };
 
     return (
         <section className={styles.formWrapper}>
@@ -175,7 +168,7 @@ export default function EditPlaylist() {
                             <button
                                 className={styles.button}
                                 type="button"
-                                onClick={handleRestore}
+                                onClick={() => reset()}
                             >
                                 Restaurar Datos
                             </button>

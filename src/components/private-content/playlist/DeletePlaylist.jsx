@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import { getFirebaseErrorMessage } from 'utils/helpers/getFirebaseErrorMessage';
 import { useAuth } from 'contexts/AuthProvider'
+import { useNavigate, useParams } from 'react-router-dom';
 
-export default function DeletePlaylist({ playlist_id, onClose }) {
+export default function DeletePlaylist() {
 
+    const { playlist_id } = useParams();
     const { deletePlaylistDB } = useAuth();
+    const navigate = useNavigate();
 
     const [asyncDeleteState, setAsyncDeleteState] = useState({
         isLoading: false,
@@ -16,8 +19,8 @@ export default function DeletePlaylist({ playlist_id, onClose }) {
             setAsyncDeleteState({ isLoading: true, error: null });
 
             await deletePlaylistDB(playlist_id);
+            navigate(-1, { replace: true });
 
-            onClose();
 
         } catch (error) {
             setAsyncDeleteState({
@@ -44,7 +47,7 @@ export default function DeletePlaylist({ playlist_id, onClose }) {
                     ? <p>Borrando...</p>
                     : <>
                         <button
-                            onClick={onClose}
+                            onClick={() => navigate(-1, { replace: true })}
                         >
                             Cancelar
                         </button>

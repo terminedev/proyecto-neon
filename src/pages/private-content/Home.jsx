@@ -3,21 +3,19 @@ import { Link } from "react-router-dom";
 import { getFirebaseErrorMessage } from 'utils/helpers/getFirebaseErrorMessage';
 import { useAuth } from 'contexts/AuthProvider';
 import VideoCard from "components/private-content/video/VideoCard";
-import PlaylistCard from "components/private-content/playlist/PlaylistCard";
 
 import styles from 'styles/Grid.module.css';
 
 export default function Home() {
-
     document.title = "Home | Proyecto Neón | Gastøn ♱érmine";
 
-    const { user, getLatestVideos, getLatestPlaylist } = useAuth();
+    const { user, getAllVideos, getVideoCountDB } = useAuth();
 
     const [asyncHomeData, setAsyncHomeData] = useState({
         data: {
             videos: [],
-            playlists: []
         },
+        count: 0,
         isLoading: false,
         error: null
     });
@@ -27,32 +25,27 @@ export default function Home() {
 
         const fetchData = async () => {
             try {
-                setAsyncHomeData({
-                    data: {
-                        videos: [],
-                        playlists: []
-                    },
+                setAsyncHomeData(prev => ({
+                    ...prev,
                     isLoading: true,
                     error: null
-                });
+                }));
 
-                const [videosData, playlistsData] = await Promise.all([
-                    getLatestVideos(),
-                    getLatestPlaylist()
-                ]);
+                const videosData = await getAllVideos();
+                const count = await getVideoCountDB();
 
                 setAsyncHomeData({
                     data: {
                         videos: videosData || [],
-                        playlists: playlistsData || []
                     },
+                    count: count,
                     isLoading: false,
                     error: null
                 });
 
             } catch (error) {
                 setAsyncHomeData({
-                    data: { videos: [], playlists: [] },
+                    data: { videos: [] },
                     isLoading: false,
                     error: error
                 });
@@ -60,26 +53,43 @@ export default function Home() {
         };
 
         fetchData();
-    }, []);
+    }, [user]);
 
-    const { data, isLoading, error } = asyncHomeData;
+    const { data, isLoading, error, count } = asyncHomeData;
 
     return (
         <>
             {/* Botones acción principal */}
-            <section>
-                <Link to="/agregar-video">Agregar Vídeo</Link>
-                <Link to="/crear-playlist">Agregar Playlist</Link>
-            </section>
+            {count < 20 &&
+                <section style={{ width: "100%" }}>
+                    <Link
+                        to="/agregar-video"
+                        style={{
+                            display: "block",
+                            width: "100%",
+                            padding: "10px 0",
+                            textAlign: "center",
+                            border: "2px solid #2271ff",
+                            color: "#2271ff",
+                            backgroundColor: "transparent",
+                            borderRadius: "5px",
+                            textDecoration: "none",
+                            fontWeight: "bold"
+                        }}
+                    >
+                        Agregar Vídeo
+                    </Link>
+                </section>
+            }
 
-            {/* Manejo de Error Global para la carga inicial */}
+
+            {/* Manejo de Error Global */}
             {error && <p>*{getFirebaseErrorMessage(error.code)}</p>}
 
             {/* Sección Vídeos */}
             <section>
                 <header className={styles.sectionHeader}>
-                    <h2>Tus vídeos</h2>
-                    <Link to="/mis-videos">Ver más</Link>
+                    <h2>Tus vídeos ({count}/20)</h2>
                 </header>
 
                 <hr />
@@ -91,42 +101,12 @@ export default function Home() {
                         {
                             data.videos.length > 0 ? (
                                 data.videos.map(video => (
-                                    <li>
-
+                                    <li key={video.video_id}>
                                         <VideoCard videoData={video} />
-
                                     </li>
                                 ))
                             ) : (
                                 !error && <p>No hay vídeos recientes.</p>
-                            )
-                        }
-                    </ul>
-                )}
-            </section>
-
-            {/* Sección Playlist */}
-            <section>
-                <header className={styles.sectionHeader}>
-                    <h2>Tus playlists</h2>
-                    <Link to="/mis-playlists">Ver más</Link>
-                </header>
-
-                <hr />
-
-                {isLoading ? (
-                    <p>Cargando playlists...</p>
-                ) : (
-                    <ul className={styles.grid}>
-                        {
-                            data.playlists.length > 0 ? (
-                                data.playlists.map(playlist => (
-                                    <li key={playlist.playlist_id}>
-                                        <PlaylistCard playlistData={playlist} />
-                                    </li>
-                                ))
-                            ) : (
-                                !error && <p>No hay playlists recientes.</p>
                             )
                         }
                     </ul>

@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import { getFirebaseErrorMessage } from 'utils/helpers/getFirebaseErrorMessage';
 import { useAuth } from 'contexts/AuthProvider'
+import { useNavigate, useParams } from 'react-router-dom';
 
-export default function DeleteVideo({ video_id, onClose }) {
+export default function DeleteVideo() {
 
+    const { video_id } = useParams();
     const { deleteVideoDB } = useAuth();
+    const navigate = useNavigate();
 
     const [asyncDeleteState, setAsyncDeleteState] = useState({
         isLoading: false,
@@ -17,7 +20,7 @@ export default function DeleteVideo({ video_id, onClose }) {
 
             await deleteVideoDB(video_id);
 
-            onClose();
+            navigate(-1, { replace: true });
 
         } catch (error) {
             setAsyncDeleteState({
@@ -28,7 +31,7 @@ export default function DeleteVideo({ video_id, onClose }) {
     };
 
     return (
-        <dialog open>
+        <section>
 
             <h3>¿Estás seguro?</h3>
             <p>Esta acción no se puede deshacer.</p>
@@ -44,7 +47,7 @@ export default function DeleteVideo({ video_id, onClose }) {
                     ? <p>Borrando...</p>
                     : <>
                         <button
-                            onClick={onClose}
+                            onClick={() => navigate(-1, { replace: true })}
                         >
                             Cancelar
                         </button>
@@ -55,6 +58,6 @@ export default function DeleteVideo({ video_id, onClose }) {
                         </button>
                     </>
             }
-        </dialog>
+        </section>
     );
 };

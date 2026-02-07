@@ -39,7 +39,7 @@ const MAX_LIMIT = 20;
 
 export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
-    const [authLoading, setAuthLoading] = useState(true); // <--- NUEVO
+    const [authLoading, setAuthLoading] = useState(true);
 
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged((firebaseUser) => {
@@ -408,6 +408,39 @@ export function AuthProvider({ children }) {
         }
     }, []);
 
+    const deleteVideoDB = useCallback(async (video_id) => {
+        if (!user) throw new Error("Usuario no autenticado");
+
+        try {
+            const docRef = doc(db, "videos", video_id);
+            await deleteDoc(docRef);
+
+            return { success: true };
+        } catch (error) {
+            console.error("Error al eliminar el vídeo:", error.code, error.message);
+            throw error;
+        }
+    }, [user]);
+
+    const getVideoCountDB = useCallback(async () => {
+        if (!user) throw new Error("Usuario no autenticado");
+
+        try {
+            const q = query(
+                collection(db, 'videos'),
+                where("user_id", "==", user.uid)
+            );
+
+            const snapshot = await getCountFromServer(q);
+
+            // Retornamos el número exacto
+            return snapshot.data().count;
+
+        } catch (error) {
+            console.error("Error al obtener la cantidad de vídeos:", error.code, error.message);
+            throw error;
+        }
+    }, [user]);
 
     // --------------------------------------
 
@@ -431,6 +464,8 @@ export function AuthProvider({ children }) {
         removeSongFromPlaylist,
         getAllVideos,
         getVideosAccordingToPlaylist,
+        deleteVideoDB,
+        getVideoCountDB,
         authLoading
     }), [
         user,
@@ -451,7 +486,9 @@ export function AuthProvider({ children }) {
         updatePlaylistDB,
         removeSongFromPlaylist,
         getAllVideos,
+        deleteVideoDB,
         getVideosAccordingToPlaylist,
+        getVideoCountDB,
         authLoading
     ]);
     return (
